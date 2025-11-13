@@ -1,0 +1,1082 @@
+{
+  "nodes": {
+    "52633725": {
+      "id": "52633725",
+      "label": "ApplicationConfig",
+      "parent": "-1854488872",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ApplicationConfig"
+      }
+    },
+    "92420881": {
+      "id": "92420881",
+      "label": "DatabaseConnection",
+      "parent": "-1350909915",
+      "metadata": {
+        "type": "provider",
+        "internal": false,
+        "sourceModuleName": "MongooseCoreModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "DatabaseConnection"
+      }
+    },
+    "203550704": {
+      "id": "203550704",
+      "label": "ExternalContextCreator",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "ExternalContextCreator",
+        "initTime": 7.555466000000024
+      }
+    },
+    "211572259": {
+      "id": "211572259",
+      "label": "ConfigHostModule",
+      "metadata": {
+        "type": "module",
+        "global": true,
+        "dynamic": false,
+        "internal": false
+      }
+    },
+    "225063248": {
+      "id": "225063248",
+      "label": "InternalCoreModule",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "InternalCoreModule",
+        "initTime": 7.847527999999954
+      }
+    },
+    "264711474": {
+      "id": "264711474",
+      "label": "MongooseModule",
+      "parent": "699745446",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "MongooseModule",
+        "initTime": 7.378522000000032
+      }
+    },
+    "303302557": {
+      "id": "303302557",
+      "label": "ModuleRef",
+      "parent": "211572259",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "ConfigHostModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ModuleRef"
+      }
+    },
+    "555176277": {
+      "id": "555176277",
+      "label": "InternalCoreModule",
+      "metadata": {
+        "type": "module",
+        "global": true,
+        "dynamic": true,
+        "internal": true
+      }
+    },
+    "603011239": {
+      "id": "603011239",
+      "label": "UsersService",
+      "parent": "-2003726489",
+      "metadata": {
+        "type": "provider",
+        "internal": false,
+        "sourceModuleName": "UsersModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": false,
+        "token": "UsersService",
+        "initTime": 7.239204000000029
+      }
+    },
+    "671882984": {
+      "id": "671882984",
+      "label": "Reflector",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "Reflector",
+        "initTime": 7.752593000000047
+      }
+    },
+    "699745446": {
+      "id": "699745446",
+      "label": "MongooseModule",
+      "metadata": {
+        "type": "module",
+        "global": false,
+        "dynamic": true,
+        "internal": false
+      }
+    },
+    "902560543": {
+      "id": "902560543",
+      "label": "ModuleRef",
+      "parent": "-1350909915",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ModuleRef"
+      }
+    },
+    "915774976": {
+      "id": "915774976",
+      "label": "ApplicationConfig",
+      "parent": "1712628187",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "ConfigModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ApplicationConfig"
+      }
+    },
+    "930519593": {
+      "id": "930519593",
+      "label": "ConfigService",
+      "parent": "211572259",
+      "metadata": {
+        "type": "provider",
+        "internal": false,
+        "sourceModuleName": "ConfigHostModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "Symbol(CONFIG_SERVICE)",
+        "initTime": 7.752902000000006
+      }
+    },
+    "981404832": {
+      "id": "981404832",
+      "label": "ModuleRef",
+      "parent": "699745446",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ModuleRef"
+      }
+    },
+    "984659044": {
+      "id": "984659044",
+      "label": "MongooseModule",
+      "parent": "-1854488872",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "MongooseModule",
+        "initTime": 7.22825499999999
+      }
+    },
+    "1063746662": {
+      "id": "1063746662",
+      "label": "CONFIGURATION_TOKEN",
+      "parent": "211572259",
+      "metadata": {
+        "type": "provider",
+        "internal": false,
+        "sourceModuleName": "ConfigHostModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "CONFIGURATION_TOKEN",
+        "initTime": 7.4193859999999745
+      }
+    },
+    "1434456218": {
+      "id": "1434456218",
+      "label": "Reflector",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": true,
+        "token": "Reflector",
+        "initTime": 8.171814999999981
+      }
+    },
+    "1690574933": {
+      "id": "1690574933",
+      "label": "ModuleRef",
+      "parent": "1712628187",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "ConfigModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ModuleRef"
+      }
+    },
+    "1712628187": {
+      "id": "1712628187",
+      "label": "ConfigModule",
+      "metadata": {
+        "type": "module",
+        "global": false,
+        "dynamic": true,
+        "internal": false
+      }
+    },
+    "1737837706": {
+      "id": "1737837706",
+      "label": "ApplicationConfig",
+      "parent": "-1350909915",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ApplicationConfig"
+      }
+    },
+    "1769319388": {
+      "id": "1769319388",
+      "label": "ConfigModule",
+      "parent": "1712628187",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "ConfigModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ConfigModule",
+        "initTime": 7.556355999999994
+      }
+    },
+    "1787828844": {
+      "id": "1787828844",
+      "label": "ConfigHostModule",
+      "parent": "211572259",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "ConfigHostModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ConfigHostModule",
+        "initTime": 7.446666999999991
+      }
+    },
+    "1919157847": {
+      "id": "1919157847",
+      "label": "REQUEST",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": false,
+        "scope": 2,
+        "transient": false,
+        "exported": true,
+        "token": "REQUEST",
+        "initTime": 7.398173999999983
+      }
+    },
+    "1986699406": {
+      "id": "1986699406",
+      "label": "MongooseConnectionName",
+      "parent": "-1350909915",
+      "metadata": {
+        "type": "provider",
+        "internal": false,
+        "sourceModuleName": "MongooseCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "MongooseConnectionName"
+      }
+    },
+    "2118694856": {
+      "id": "2118694856",
+      "label": "ApplicationConfig",
+      "parent": "211572259",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "ConfigHostModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ApplicationConfig"
+      }
+    },
+    "-1486320561": {
+      "id": "-1486320561",
+      "label": "ModuleRef",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ModuleRef"
+      }
+    },
+    "-651043398": {
+      "id": "-651043398",
+      "label": "ApplicationConfig",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ApplicationConfig"
+      }
+    },
+    "-255469305": {
+      "id": "-255469305",
+      "label": "INQUIRER",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 1,
+        "transient": true,
+        "exported": true,
+        "token": "INQUIRER",
+        "initTime": 7.3937669999999684
+      }
+    },
+    "-26938366": {
+      "id": "-26938366",
+      "label": "ModulesContainer",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "ModulesContainer",
+        "initTime": 7.552942999999971
+      }
+    },
+    "-326832201": {
+      "id": "-326832201",
+      "label": "HttpAdapterHost",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "HttpAdapterHost",
+        "initTime": 7.5472670000000335
+      }
+    },
+    "-702581189": {
+      "id": "-702581189",
+      "label": "LazyModuleLoader",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "LazyModuleLoader",
+        "initTime": 7.545876000000021
+      }
+    },
+    "-1904419534": {
+      "id": "-1904419534",
+      "label": "SerializedGraph",
+      "parent": "555176277",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "InternalCoreModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "SerializedGraph",
+        "initTime": 7.538805000000025
+      }
+    },
+    "-19112576": {
+      "id": "-19112576",
+      "label": "AppModule",
+      "metadata": {
+        "type": "module",
+        "global": false,
+        "dynamic": false,
+        "internal": false
+      }
+    },
+    "-2139588960": {
+      "id": "-2139588960",
+      "label": "AppModule",
+      "parent": "-19112576",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "AppModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "AppModule",
+        "initTime": 7.5633359999999925
+      }
+    },
+    "-71302842": {
+      "id": "-71302842",
+      "label": "ModuleRef",
+      "parent": "-19112576",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "AppModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ModuleRef"
+      }
+    },
+    "-2064622725": {
+      "id": "-2064622725",
+      "label": "ApplicationConfig",
+      "parent": "-19112576",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "AppModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ApplicationConfig"
+      }
+    },
+    "-503631789": {
+      "id": "-503631789",
+      "label": "ConfigService",
+      "parent": "1712628187",
+      "metadata": {
+        "type": "provider",
+        "internal": false,
+        "sourceModuleName": "ConfigModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "ConfigService",
+        "initTime": 8.558249999999987
+      }
+    },
+    "-572011637": {
+      "id": "-572011637",
+      "label": "ApplicationConfig",
+      "parent": "699745446",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ApplicationConfig"
+      }
+    },
+    "-1350909915": {
+      "id": "-1350909915",
+      "label": "MongooseCoreModule",
+      "metadata": {
+        "type": "module",
+        "global": true,
+        "dynamic": true,
+        "internal": false
+      }
+    },
+    "-941557008": {
+      "id": "-941557008",
+      "label": "MongooseCoreModule",
+      "parent": "-1350909915",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseCoreModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "MongooseCoreModule",
+        "initTime": 7.711962000000028
+      }
+    },
+    "-2003726489": {
+      "id": "-2003726489",
+      "label": "UsersModule",
+      "metadata": {
+        "type": "module",
+        "global": false,
+        "dynamic": false,
+        "internal": false
+      }
+    },
+    "-495603840": {
+      "id": "-495603840",
+      "label": "UsersModule",
+      "parent": "-2003726489",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "UsersModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "UsersModule",
+        "initTime": 7.25561799999997
+      }
+    },
+    "-618964563": {
+      "id": "-618964563",
+      "label": "ModuleRef",
+      "parent": "-2003726489",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "UsersModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ModuleRef"
+      }
+    },
+    "-643958110": {
+      "id": "-643958110",
+      "label": "ApplicationConfig",
+      "parent": "-2003726489",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "UsersModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ApplicationConfig"
+      }
+    },
+    "-1102473136": {
+      "id": "-1102473136",
+      "label": "UsersController",
+      "parent": "-2003726489",
+      "metadata": {
+        "type": "controller",
+        "internal": false,
+        "sourceModuleName": "UsersModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": false,
+        "token": "UsersController"
+      }
+    },
+    "-1854488872": {
+      "id": "-1854488872",
+      "label": "MongooseModule",
+      "metadata": {
+        "type": "module",
+        "global": false,
+        "dynamic": true,
+        "internal": false
+      }
+    },
+    "-1762758574": {
+      "id": "-1762758574",
+      "label": "ModuleRef",
+      "parent": "-1854488872",
+      "metadata": {
+        "type": "provider",
+        "internal": true,
+        "sourceModuleName": "MongooseModule",
+        "durable": false,
+        "static": true,
+        "scope": 0,
+        "transient": false,
+        "exported": false,
+        "token": "ModuleRef"
+      }
+    },
+    "-1751537990": {
+      "id": "-1751537990",
+      "label": "usersModel",
+      "parent": "-1854488872",
+      "metadata": {
+        "type": "provider",
+        "internal": false,
+        "sourceModuleName": "MongooseModule",
+        "durable": false,
+        "static": true,
+        "transient": false,
+        "exported": true,
+        "token": "usersModel"
+      }
+    }
+  },
+  "edges": {
+    "189694679": {
+      "source": "1434456218",
+      "target": "671882984",
+      "metadata": {
+        "type": "class-to-class",
+        "sourceModuleName": "InternalCoreModule",
+        "sourceClassName": "Reflector",
+        "targetClassName": "Reflector",
+        "sourceClassToken": "Reflector",
+        "targetClassToken": "Reflector",
+        "targetModuleName": "InternalCoreModule",
+        "keyOrIndex": 0,
+        "injectionType": "constructor",
+        "internal": true
+      },
+      "id": "189694679"
+    },
+    "330046600": {
+      "source": "699745446",
+      "target": "-1350909915",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "MongooseModule",
+        "targetModuleName": "MongooseCoreModule"
+      },
+      "id": "330046600"
+    },
+    "353572985": {
+      "source": "1712628187",
+      "target": "211572259",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "ConfigModule",
+        "targetModuleName": "ConfigHostModule"
+      },
+      "id": "353572985"
+    },
+    "456853847": {
+      "source": "699745446",
+      "target": "211572259",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "MongooseModule",
+        "targetModuleName": "ConfigHostModule"
+      },
+      "id": "456853847"
+    },
+    "584653416": {
+      "source": "1712628187",
+      "target": "555176277",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "ConfigModule",
+        "targetModuleName": "InternalCoreModule"
+      },
+      "id": "584653416"
+    },
+    "608766232": {
+      "source": "-1350909915",
+      "target": "555176277",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "MongooseCoreModule",
+        "targetModuleName": "InternalCoreModule"
+      },
+      "id": "608766232"
+    },
+    "805244905": {
+      "source": "-1350909915",
+      "target": "211572259",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "MongooseCoreModule",
+        "targetModuleName": "ConfigHostModule"
+      },
+      "id": "805244905"
+    },
+    "897941956": {
+      "source": "-1854488872",
+      "target": "555176277",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "MongooseModule",
+        "targetModuleName": "InternalCoreModule"
+      },
+      "id": "897941956"
+    },
+    "987755577": {
+      "source": "-2003726489",
+      "target": "555176277",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "UsersModule",
+        "targetModuleName": "InternalCoreModule"
+      },
+      "id": "987755577"
+    },
+    "1056428433": {
+      "source": "-19112576",
+      "target": "555176277",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "AppModule",
+        "targetModuleName": "InternalCoreModule"
+      },
+      "id": "1056428433"
+    },
+    "1207819375": {
+      "source": "-19112576",
+      "target": "-1350909915",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "AppModule",
+        "targetModuleName": "MongooseCoreModule"
+      },
+      "id": "1207819375"
+    },
+    "1475920902": {
+      "source": "-503631789",
+      "target": "930519593",
+      "metadata": {
+        "type": "class-to-class",
+        "sourceModuleName": "ConfigModule",
+        "sourceClassName": "ConfigService",
+        "targetClassName": "ConfigService",
+        "sourceClassToken": "ConfigService",
+        "targetClassToken": "Symbol(CONFIG_SERVICE)",
+        "targetModuleName": "ConfigHostModule",
+        "keyOrIndex": 0,
+        "injectionType": "constructor"
+      },
+      "id": "1475920902"
+    },
+    "1497086506": {
+      "source": "1712628187",
+      "target": "-1350909915",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "ConfigModule",
+        "targetModuleName": "MongooseCoreModule"
+      },
+      "id": "1497086506"
+    },
+    "2129970765": {
+      "source": "-941557008",
+      "target": "1986699406",
+      "metadata": {
+        "type": "class-to-class",
+        "sourceModuleName": "MongooseCoreModule",
+        "sourceClassName": "MongooseCoreModule",
+        "targetClassName": "MongooseConnectionName",
+        "sourceClassToken": "MongooseCoreModule",
+        "targetClassToken": "MongooseConnectionName",
+        "targetModuleName": "MongooseCoreModule",
+        "keyOrIndex": 0,
+        "injectionType": "constructor"
+      },
+      "id": "2129970765"
+    },
+    "-951393523": {
+      "source": "930519593",
+      "target": "1063746662",
+      "metadata": {
+        "type": "class-to-class",
+        "sourceModuleName": "ConfigHostModule",
+        "sourceClassName": "ConfigService",
+        "targetClassName": "CONFIGURATION_TOKEN",
+        "sourceClassToken": "Symbol(CONFIG_SERVICE)",
+        "targetClassToken": "CONFIGURATION_TOKEN",
+        "targetModuleName": "ConfigHostModule",
+        "keyOrIndex": 0,
+        "injectionType": "constructor"
+      },
+      "id": "-951393523"
+    },
+    "-1088946238": {
+      "source": "-941557008",
+      "target": "902560543",
+      "metadata": {
+        "type": "class-to-class",
+        "sourceModuleName": "MongooseCoreModule",
+        "sourceClassName": "MongooseCoreModule",
+        "targetClassName": "ModuleRef",
+        "sourceClassToken": "MongooseCoreModule",
+        "targetClassToken": "ModuleRef",
+        "targetModuleName": "MongooseCoreModule",
+        "keyOrIndex": 1,
+        "injectionType": "constructor",
+        "internal": true
+      },
+      "id": "-1088946238"
+    },
+    "-844262897": {
+      "source": "-19112576",
+      "target": "1712628187",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "AppModule",
+        "targetModuleName": "ConfigModule"
+      },
+      "id": "-844262897"
+    },
+    "-1152986467": {
+      "source": "-19112576",
+      "target": "699745446",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "AppModule",
+        "targetModuleName": "MongooseModule"
+      },
+      "id": "-1152986467"
+    },
+    "-158970266": {
+      "source": "-19112576",
+      "target": "-2003726489",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "AppModule",
+        "targetModuleName": "UsersModule"
+      },
+      "id": "-158970266"
+    },
+    "-815553404": {
+      "source": "-19112576",
+      "target": "211572259",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "AppModule",
+        "targetModuleName": "ConfigHostModule"
+      },
+      "id": "-815553404"
+    },
+    "-1995183955": {
+      "source": "211572259",
+      "target": "555176277",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "ConfigHostModule",
+        "targetModuleName": "InternalCoreModule"
+      },
+      "id": "-1995183955"
+    },
+    "-718282705": {
+      "source": "211572259",
+      "target": "-1350909915",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "ConfigHostModule",
+        "targetModuleName": "MongooseCoreModule"
+      },
+      "id": "-718282705"
+    },
+    "-2001102970": {
+      "source": "699745446",
+      "target": "555176277",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "MongooseModule",
+        "targetModuleName": "InternalCoreModule"
+      },
+      "id": "-2001102970"
+    },
+    "-345087101": {
+      "source": "-2003726489",
+      "target": "-1854488872",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "UsersModule",
+        "targetModuleName": "MongooseModule"
+      },
+      "id": "-345087101"
+    },
+    "-991562516": {
+      "source": "-2003726489",
+      "target": "211572259",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "UsersModule",
+        "targetModuleName": "ConfigHostModule"
+      },
+      "id": "-991562516"
+    },
+    "-1896236073": {
+      "source": "-2003726489",
+      "target": "-1350909915",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "UsersModule",
+        "targetModuleName": "MongooseCoreModule"
+      },
+      "id": "-1896236073"
+    },
+    "-103257323": {
+      "source": "-1854488872",
+      "target": "211572259",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "MongooseModule",
+        "targetModuleName": "ConfigHostModule"
+      },
+      "id": "-103257323"
+    },
+    "-1121554618": {
+      "source": "-1854488872",
+      "target": "-1350909915",
+      "metadata": {
+        "type": "module-to-module",
+        "sourceModuleName": "MongooseModule",
+        "targetModuleName": "MongooseCoreModule"
+      },
+      "id": "-1121554618"
+    }
+  },
+  "entrypoints": {},
+  "extras": {
+    "orphanedEnhancers": [],
+    "attachedEnhancers": []
+  },
+  "status": "partial",
+  "metadata": {
+    "cause": {
+      "type": "unknown-dependencies",
+      "context": {
+        "index": 0,
+        "dependencies": [
+          "Function"
+        ],
+        "name": "Function"
+      },
+      "moduleId": "-2003726489",
+      "nodeId": "-1102473136"
+    }
+  }
+}
