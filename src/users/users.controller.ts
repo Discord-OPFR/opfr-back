@@ -1,10 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 
-import type { UsersService } from './users.service';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
   findAll() {

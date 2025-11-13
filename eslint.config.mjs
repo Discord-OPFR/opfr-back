@@ -64,10 +64,10 @@ export default defineConfig([
     },
   },
   {
-    files: ['**/*.stories.*'],
+    files: ['**/*.controller.*'],
 
     rules: {
-      'import/no-anonymous-default-export': 'off',
+      '@typescript-eslint/consistent-type-imports': 'off',
     },
   },
 ]);
