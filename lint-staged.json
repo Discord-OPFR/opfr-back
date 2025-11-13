@@ -1,0 +1,6 @@
+{
+  "{src,test}/**/*.{js,jsx,cjs,ts,tsx,json,css,scss,md}": [
+    "npm run fmt",
+    "npm run lint"
+  ]
+}
