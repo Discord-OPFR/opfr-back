@@ -16,4 +16,8 @@ export class UsersService {
   findAll() {
     return this.userModel.find().exec();
   }
+
+  findOne(id: string) {
+    return this.userModel.findOne({ userId: id }).exec();
+  }
 }
