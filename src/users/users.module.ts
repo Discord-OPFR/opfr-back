@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { userSchema } from '@opfr/services';
 
+import { AuthModule } from '../auth/auth.module';
 import { UsersCooldownModule } from './users-cooldown/users-cooldown.module';
 import { UsersCrewModule } from './users-crew/users-crew.module';
 import { UsersDailyReportModule } from './users-daily-report/users-daily-report.module';
@@ -33,6 +34,7 @@ import { UserModelName, UsersService } from './users.service';
     UsersGamesModule,
     UsersRaidModule,
     UsersShopModule,
+    AuthModule,
   ],
   providers: [UsersService],
   controllers: [UsersController],
