@@ -45,7 +45,7 @@ export default defineConfig([
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-this-alias': 'off',
-      '@typescript-eslint/consistent-type-imports': 'warn',
+      '@typescript-eslint/consistent-type-imports': 'off',
       'jsx-quotes': ['warn', 'prefer-double'],
       'no-case-declarations': 'off',
       'no-prototype-builtins': 'off',
@@ -61,13 +61,6 @@ export default defineConfig([
       ],
 
       semi: ['warn', 'always'],
-    },
-  },
-  {
-    files: ['**/*.controller.*'],
-
-    rules: {
-      '@typescript-eslint/consistent-type-imports': 'off',
     },
   },
 ]);
