@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   ForbiddenException,
   Get,
@@ -35,8 +34,6 @@ export class AuthController {
 
   @Get('discord/callback')
   async callback(@Query('code') code: string) {
-    if (!code) throw new BadRequestException('Code missing');
-
     const token = await this.authService.getToken(code);
 
     const member = await this.authService.getDiscordUserInfo(token);

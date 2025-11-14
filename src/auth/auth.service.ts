@@ -1,14 +1,10 @@
 import {
-  BadRequestException,
+  BadGatewayException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
 import type { ConfigService } from '@nestjs/config';
 import type { JwtService } from '@nestjs/jwt';
-
-// type MemberInfo {
-//
-// }
 
 @Injectable()
 export class AuthService {
@@ -44,8 +40,11 @@ export class AuthService {
     const result = await response.json();
 
     if (!response.ok) {
-      console.log('Unable to connect to Discord', result);
-      throw new BadRequestException();
+      throw new BadGatewayException({
+        message: 'Failed to fetch external resource',
+        status: response.status,
+        response: result,
+      });
     }
 
     return result.access_token;
@@ -65,8 +64,11 @@ export class AuthService {
     const result = await response.json();
 
     if (!response.ok) {
-      console.log('Unable to connect to Discord', result);
-      throw new InternalServerErrorException();
+      throw new BadGatewayException({
+        message: 'Failed to fetch external resource',
+        status: response.status,
+        response: result,
+      });
     }
 
     return result;
