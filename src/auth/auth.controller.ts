@@ -2,11 +2,16 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  HttpStatus,
   InternalServerErrorException,
   Query,
   Redirect,
+  Req,
+  Res,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import type { Request, Response } from 'express';
 
 import { AuthService } from './auth.service';
 
@@ -33,7 +38,7 @@ export class AuthController {
   }
 
   @Get('discord/callback')
-  async callback(@Query('code') code: string) {
+  async callback(@Query('code') code: string, @Res() res: Response) {
     const token = await this.authService.getToken(code);
 
     const member = await this.authService.getDiscordUserInfo(token);
@@ -52,8 +57,44 @@ export class AuthController {
       token,
     };
 
-    const jwtToken = await this.authService.generateAccessToken(payload);
+    const accessToken = await this.authService.generateAccessToken(payload);
+    const refreshToken = await this.authService.generateRefreshToken(payload);
 
-    return { token: jwtToken };
+    const NODE_ENV = this.configService.get<string>('NODE_ENV');
+
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      signed: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    });
+
+    res.status(HttpStatus.CREATED).json({ accessToken });
+  }
+
+  @Get('refresh')
+  async refresh(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.signedCookies['refresh_token'];
+
+    if (!refreshToken)
+      throw new UnauthorizedException('Missing or invalid refresh token');
+
+    const payload = await this.authService.verifyRefreshToken(refreshToken);
+    const newToken = await this.authService.rotateToken(payload, refreshToken);
+
+    const NODE_ENV = this.configService.get<string>('NODE_ENV');
+
+    res.cookie('refresh_token', newToken, {
+      httpOnly: true,
+      signed: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    });
+
+    res.status(HttpStatus.CREATED).send();
   }
 }

@@ -3,18 +3,10 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
-  imports: [
-    JwtModule.registerAsync({
-      useFactory: () => ({
-        secret: process.env.JWT_SECRET,
-        signOptions: {
-          expiresIn: '1h',
-        },
-      }),
-    }),
-  ],
+  imports: [JwtModule.register({}), StorageModule],
   providers: [AuthService],
   controllers: [AuthController],
   exports: [JwtModule],
