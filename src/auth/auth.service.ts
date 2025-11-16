@@ -10,6 +10,12 @@ import bcrypt from 'bcrypt';
 
 import { StorageService } from './storage/storage.service';
 
+export type TokenPayload = {
+  userId: string;
+  username: string;
+  discordToken: string;
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -23,8 +29,7 @@ export class AuthService {
     const clientSecret = this.configService.get<string>(
       'DISCORD_CLIENT_SECRET',
     );
-    // const redirect_url = this.configService.get<string>('DISCORD_REDIRECT_URL');
-    const redirect_url = 'http://localhost:1000/test';
+    const redirect_url = this.configService.get<string>('DISCORD_REDIRECT_URL');
 
     if (!clientId || !clientSecret || !redirect_url)
       throw new InternalServerErrorException();
@@ -80,11 +85,7 @@ export class AuthService {
     return result;
   }
 
-  async generateAccessToken(member: {
-    id: string;
-    name: string;
-    token: string;
-  }): Promise<string> {
+  async generateAccessToken(member: TokenPayload): Promise<string> {
     const JWT_SECRET = this.configService.get<string>('JWT_SECRET');
 
     if (!JWT_SECRET) throw new InternalServerErrorException();
@@ -95,11 +96,7 @@ export class AuthService {
     });
   }
 
-  async generateRefreshToken(member: {
-    id: string;
-    name: string;
-    token: string;
-  }): Promise<string> {
+  async generateRefreshToken(member: TokenPayload): Promise<string> {
     const REFRESH_JWT_SECRET =
       this.configService.get<string>('REFRESH_JWT_SECRET');
 
@@ -113,39 +110,39 @@ export class AuthService {
     const hash = await bcrypt.hash(refreshToken, 10);
 
     await this.storageService.createAuth({
-      userId: member.id,
-      username: member.name,
+      userId: member.userId,
+      username: member.username,
       refreshToken: hash,
     });
 
     return refreshToken;
   }
 
-  async verifyRefreshToken(refreshToken: string) {
+  async verifyRefreshToken(refreshToken: string): Promise<TokenPayload> {
     const REFRESH_JWT_SECRET =
       this.configService.get<string>('REFRESH_JWT_SECRET');
 
     if (!REFRESH_JWT_SECRET) throw new InternalServerErrorException();
 
     try {
-      return this.jwtService.verify(refreshToken, {
+      const payload = await this.jwtService.verify(refreshToken, {
         secret: REFRESH_JWT_SECRET,
       });
+
+      return {
+        userId: payload.userId,
+        username: payload.username,
+        discordToken: payload.discordToken,
+      };
     } catch (error) {
       console.error('Error', error);
       throw new UnauthorizedException('Invalid token');
     }
   }
 
-  async rotateToken(
-    payload: {
-      id: string;
-      name: string;
-      token: string;
-    },
-    refreshToken: string,
-  ) {
-    const auth = await this.storageService.findAuthByUserId(payload.id);
+  async rotateToken(payload: TokenPayload, refreshToken: string) {
+    const auth = await this.storageService.findAuthByUserId(payload.userId);
+    console.log('auth', auth);
 
     if (!auth) throw new UnauthorizedException('Invalid token');
 
@@ -153,17 +150,17 @@ export class AuthService {
 
     if (!isValid) throw new UnauthorizedException('Invalid token');
 
-    await this.storageService.deleteAuthByUserId(payload.id);
+    console.log(payload.userId);
+    await this.storageService.deleteAuthByUserId(payload.userId);
 
-    const newToken = await this.generateRefreshToken({
-      id: payload.id,
-      name: payload.name,
-      token: payload.token,
-    });
+    const newToken = await this.generateRefreshToken(payload);
+
+    const hash = await bcrypt.hash(newToken, 10);
+
     await this.storageService.createAuth({
-      userId: payload.id,
-      username: payload.name,
-      refreshToken: newToken,
+      userId: payload.userId,
+      username: payload.username,
+      refreshToken: hash,
     });
 
     return newToken;

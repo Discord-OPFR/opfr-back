@@ -13,7 +13,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import type { Request, Response } from 'express';
 
-import { AuthService } from './auth.service';
+import { AuthService, TokenPayload } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -51,10 +51,10 @@ export class AuthController {
 
     if (!hasRoles) throw new ForbiddenException();
 
-    const payload = {
-      id: member.user.id as string,
-      name: member.user.username as string,
-      token,
+    const payload: TokenPayload = {
+      userId: member.user.id,
+      username: member.user.username,
+      discordToken: token,
     };
 
     const accessToken = await this.authService.generateAccessToken(payload);

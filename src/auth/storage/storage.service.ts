@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ProjectionType, RootFilterQuery } from 'mongoose';
 
-import { Auth, AuthDocument } from './types';
+import { Auth, AuthDocument } from './schemas/auth.schema';
 
 export const AuthModelName = 'Auth';
 
 @Injectable()
 export class StorageService {
   constructor(
-    @InjectModel(AuthModelName)
-    private readonly authModel: Model<Auth>,
+    @InjectModel(Auth.name)
+    private authModel: Model<Auth>,
   ) {}
 
   createAuth(auth: Auth) {
