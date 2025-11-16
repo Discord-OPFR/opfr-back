@@ -5,7 +5,6 @@ import {
   HttpStatus,
   InternalServerErrorException,
   Query,
-  Redirect,
   Req,
   Res,
   UnauthorizedException,
@@ -23,8 +22,7 @@ export class AuthController {
   ) {}
 
   @Get('login')
-  @Redirect()
-  login() {
+  login(@Res() res: Response) {
     const clientId = this.configService.get<string>('DISCORD_CLIENT_ID');
     const redirect_uri = this.configService.get<string>('DISCORD_REDIRECT_URL');
 
@@ -34,7 +32,7 @@ export class AuthController {
 
     const discordUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=identify+guilds+guilds.members.read`;
 
-    return { url: discordUrl };
+    res.redirect(discordUrl);
   }
 
   @Get('discord/callback')
@@ -71,7 +69,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
 
-    res.status(HttpStatus.CREATED).json({ accessToken });
+    res.status(HttpStatus.OK).json({ accessToken });
   }
 
   @Get('refresh')
@@ -95,6 +93,8 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
 
-    res.status(HttpStatus.CREATED).send();
+    const accessToken = await this.authService.generateAccessToken(payload);
+
+    res.status(HttpStatus.OK).send({ accessToken });
   }
 }

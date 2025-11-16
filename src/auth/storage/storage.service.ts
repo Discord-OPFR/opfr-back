@@ -4,8 +4,6 @@ import { Model, ProjectionType, RootFilterQuery } from 'mongoose';
 
 import { Auth, AuthDocument } from './schemas/auth.schema';
 
-export const AuthModelName = 'Auth';
-
 @Injectable()
 export class StorageService {
   constructor(

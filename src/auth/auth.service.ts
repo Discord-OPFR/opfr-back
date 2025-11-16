@@ -142,7 +142,6 @@ export class AuthService {
 
   async rotateToken(payload: TokenPayload, refreshToken: string) {
     const auth = await this.storageService.findAuthByUserId(payload.userId);
-    console.log('auth', auth);
 
     if (!auth) throw new UnauthorizedException('Invalid token');
 
@@ -150,19 +149,8 @@ export class AuthService {
 
     if (!isValid) throw new UnauthorizedException('Invalid token');
 
-    console.log(payload.userId);
     await this.storageService.deleteAuthByUserId(payload.userId);
 
-    const newToken = await this.generateRefreshToken(payload);
-
-    const hash = await bcrypt.hash(newToken, 10);
-
-    await this.storageService.createAuth({
-      userId: payload.userId,
-      username: payload.username,
-      refreshToken: hash,
-    });
-
-    return newToken;
+    return this.generateRefreshToken(payload);
   }
 }
