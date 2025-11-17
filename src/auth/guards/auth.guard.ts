@@ -16,10 +16,9 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const authorization = request.headers.authorization;
-    const token = authorization?.split(' ')[1];
+    const accessToken = request.signedCookies['access_token'];
 
-    if (!token) {
+    if (!accessToken) {
       throw new UnauthorizedException('Token is required');
     }
 
@@ -28,7 +27,7 @@ export class AuthGuard implements CanActivate {
     if (!JWT_SECRET) throw new InternalServerErrorException();
 
     try {
-      await this.jwtService.verifyAsync(token, { secret: JWT_SECRET });
+      await this.jwtService.verifyAsync(accessToken, { secret: JWT_SECRET });
       return true;
     } catch (err) {
       console.error('Error', err);

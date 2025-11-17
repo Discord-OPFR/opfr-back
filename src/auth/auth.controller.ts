@@ -68,6 +68,15 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
 
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      signed: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 1000 * 60 * 15,
+    });
+
     res.status(HttpStatus.OK).json({ accessToken });
   }
 
