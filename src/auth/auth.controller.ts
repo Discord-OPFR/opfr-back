@@ -64,7 +64,7 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
-      path: '/',
+      path: '/auth/refresh',
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
 
@@ -97,7 +97,7 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
-      path: '/',
+      path: '/auth/refresh',
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
 
