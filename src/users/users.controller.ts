@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { UserNotFoundException } from '../errors/UserNotFound';
 import { UsersCooldownService } from './users-cooldown/users-cooldown.service';
 import { UsersCrewService } from './users-crew/users-crew.service';
@@ -16,6 +17,7 @@ import { UsersShopService } from './users-shop/users-shop.service';
 import { UsersService } from './users.service';
 
 @Controller('users')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
