@@ -4,15 +4,20 @@ import {
   Get,
   HttpStatus,
   InternalServerErrorException,
+  NotFoundException,
   Query,
   Req,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { ApiOkResponse } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 
+import { DiscordService } from '../discord/discord.service';
 import { AuthService } from './auth.service';
+import { UserDto } from './dto/user.dto';
 import { Auth } from './schemas/auth.schema';
 
 @Controller('auth')
@@ -20,7 +25,31 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
+    private readonly discordService: DiscordService,
+    private jwtService: JwtService,
   ) {}
+
+  @Get('me')
+  @ApiOkResponse({ type: UserDto })
+  async me(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.signedCookies['refresh_token'];
+
+    if (!refreshToken)
+      throw new UnauthorizedException('Missing or invalid refresh token');
+
+    try {
+      const { token } = await this.authService.verifyRefreshToken(refreshToken);
+      const member = await this.discordService.getMemberMe(token);
+
+      res.status(HttpStatus.OK).json({
+        userId: member.user.id,
+        username: member.user.username,
+        avatar: member.user.avatar,
+      });
+    } catch {
+      throw new NotFoundException();
+    }
+  }
 
   @Get('login')
   login(@Res() res: Response) {
@@ -39,23 +68,30 @@ export class AuthController {
   @Get('discord/callback')
   async callback(@Query('code') code: string, @Res() res: Response) {
     const token = await this.authService.getToken(code);
-    const member = await this.authService.getDiscordUserInfo(token);
+    const member = await this.discordService.getMemberMe(token);
 
     const admin_role_id = this.configService.get<string>('ADMIN_ROLE_ID');
+    const redirectUrl = this.configService.get<string>('APP_REDIRECT_URL');
 
-    if (!admin_role_id) throw new InternalServerErrorException();
+    if (!admin_role_id || !redirectUrl)
+      throw new InternalServerErrorException();
 
     const hasRoles = member.roles.includes(admin_role_id);
 
     if (!hasRoles) throw new ForbiddenException();
 
+    const refreshToken = await this.authService.generateRefreshToken(
+      member.user.id,
+      token,
+    );
+
     const payload: Auth = {
       userId: member.user.id,
       token,
+      refreshToken,
     };
 
     const accessToken = await this.authService.generateAccessToken(payload);
-    const refreshToken = await this.authService.generateRefreshToken(payload);
 
     const NODE_ENV = this.configService.get<string>('NODE_ENV');
 
@@ -64,7 +100,7 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
-      path: '/auth/refresh',
+      path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
 
@@ -77,7 +113,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 15,
     });
 
-    res.status(HttpStatus.OK).send();
+    res.status(HttpStatus.OK).redirect(redirectUrl);
   }
 
   @Get('refresh')

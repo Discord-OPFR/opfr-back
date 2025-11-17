@@ -10,6 +10,9 @@ export class Auth {
 
   @Prop({ required: true })
   token!: string;
+
+  @Prop({ required: true })
+  refreshToken!: string;
 }
 
 export const AuthSchema = SchemaFactory.createForClass(Auth);

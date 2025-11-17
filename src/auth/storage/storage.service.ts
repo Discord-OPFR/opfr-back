@@ -38,6 +38,6 @@ export class StorageService {
   }
 
   async updateByUserId(userId: string, token: string) {
-    return this.authModel.updateOne({ userId }, { token });
+    return this.authModel.updateOne({ userId }, { refreshToken: token });
   }
 }
