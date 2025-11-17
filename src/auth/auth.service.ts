@@ -8,13 +8,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 
+import { Auth } from './schemas/auth.schema';
 import { StorageService } from './storage/storage.service';
-
-export type TokenPayload = {
-  userId: string;
-  username: string;
-  discordToken: string;
-};
 
 @Injectable()
 export class AuthService {
@@ -85,7 +80,7 @@ export class AuthService {
     return result;
   }
 
-  async generateAccessToken(member: TokenPayload): Promise<string> {
+  async generateAccessToken(member: Auth): Promise<string> {
     const JWT_SECRET = this.configService.get<string>('JWT_SECRET');
 
     if (!JWT_SECRET) throw new InternalServerErrorException();
@@ -96,7 +91,7 @@ export class AuthService {
     });
   }
 
-  async generateRefreshToken(member: TokenPayload): Promise<string> {
+  async generateRefreshToken(member: Auth): Promise<string> {
     const REFRESH_JWT_SECRET =
       this.configService.get<string>('REFRESH_JWT_SECRET');
 
@@ -108,17 +103,23 @@ export class AuthService {
     });
 
     const hash = await bcrypt.hash(refreshToken, 10);
+    const refreshAlreadyExists = await this.storageService.exists(
+      member.userId,
+    );
 
-    await this.storageService.createAuth({
-      userId: member.userId,
-      username: member.username,
-      refreshToken: hash,
-    });
+    if (refreshAlreadyExists) {
+      await this.storageService.updateByUserId(member.userId, member.token);
+    } else {
+      await this.storageService.create({
+        userId: member.userId,
+        token: hash,
+      });
+    }
 
     return refreshToken;
   }
 
-  async verifyRefreshToken(refreshToken: string): Promise<TokenPayload> {
+  async verifyRefreshToken(refreshToken: string): Promise<Auth> {
     const REFRESH_JWT_SECRET =
       this.configService.get<string>('REFRESH_JWT_SECRET');
 
@@ -131,8 +132,7 @@ export class AuthService {
 
       return {
         userId: payload.userId,
-        username: payload.username,
-        discordToken: payload.discordToken,
+        token: payload.discordToken,
       };
     } catch (error) {
       console.error('Error', error);
@@ -140,16 +140,16 @@ export class AuthService {
     }
   }
 
-  async rotateToken(payload: TokenPayload, refreshToken: string) {
-    const auth = await this.storageService.findAuthByUserId(payload.userId);
+  async rotateToken(payload: Auth, refreshToken: string) {
+    const auth = await this.storageService.findByUserId(payload.userId);
 
     if (!auth) throw new UnauthorizedException('Invalid token');
 
-    const isValid = await bcrypt.compare(refreshToken, auth.refreshToken);
+    const isValid = await bcrypt.compare(refreshToken, auth.token);
 
     if (!isValid) throw new UnauthorizedException('Invalid token');
 
-    await this.storageService.deleteAuthByUserId(payload.userId);
+    await this.storageService.deleteByUserId(payload.userId);
 
     return this.generateRefreshToken(payload);
   }

@@ -28,6 +28,7 @@
     "@nestjs/jwt": "11.0.1",
     "@nestjs/mongoose": "11.0.3",
     "@nestjs/platform-express": "11.1.8",
+    "@nestjs/swagger": "11.2.2",
     "@opfr/canvas": "0.8.8",
     "@opfr/emojis": "0.16.0",
     "@opfr/items": "0.35.10",

@@ -5,14 +5,11 @@ export type AuthDocument = HydratedDocument<Auth>;
 
 @Schema()
 export class Auth {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   userId!: string;
 
   @Prop({ required: true })
-  username!: string;
-
-  @Prop({ required: true })
-  refreshToken!: string;
+  token!: string;
 }
 
 export const AuthSchema = SchemaFactory.createForClass(Auth);

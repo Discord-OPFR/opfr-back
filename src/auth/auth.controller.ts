@@ -12,7 +12,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import type { Request, Response } from 'express';
 
-import { AuthService, TokenPayload } from './auth.service';
+import { AuthService } from './auth.service';
+import { Auth } from './schemas/auth.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -38,7 +39,6 @@ export class AuthController {
   @Get('discord/callback')
   async callback(@Query('code') code: string, @Res() res: Response) {
     const token = await this.authService.getToken(code);
-
     const member = await this.authService.getDiscordUserInfo(token);
 
     const admin_role_id = this.configService.get<string>('ADMIN_ROLE_ID');
@@ -49,10 +49,9 @@ export class AuthController {
 
     if (!hasRoles) throw new ForbiddenException();
 
-    const payload: TokenPayload = {
+    const payload: Auth = {
       userId: member.user.id,
-      username: member.user.username,
-      discordToken: token,
+      token,
     };
 
     const accessToken = await this.authService.generateAccessToken(payload);

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ProjectionType, RootFilterQuery } from 'mongoose';
 
-import { Auth, AuthDocument } from './schemas/auth.schema';
+import { Auth, AuthDocument } from '../schemas/auth.schema';
 
 @Injectable()
 export class StorageService {
@@ -11,25 +11,33 @@ export class StorageService {
     private authModel: Model<Auth>,
   ) {}
 
-  createAuth(auth: Auth) {
+  create(auth: Auth) {
     return this.authModel.create(auth);
   }
 
-  async deleteAuthByUserId(userId: string) {
+  async deleteByUserId(userId: string) {
     await this.authModel.deleteOne({ userId: userId });
   }
 
-  async findAuth(
+  async exists(userId: string) {
+    return this.authModel.exists({ userId });
+  }
+
+  async find(
     filter: RootFilterQuery<AuthDocument>,
     projection: ProjectionType<AuthDocument> = {},
   ) {
     return this.authModel.findOne(filter, projection);
   }
 
-  async findAuthByUserId(
+  async findByUserId(
     userId: string,
     projection: ProjectionType<AuthDocument> = {},
   ) {
-    return this.findAuth({ userId: userId }, projection);
+    return this.find({ userId: userId }, projection);
+  }
+
+  async updateByUserId(userId: string, token: string) {
+    return this.authModel.updateOne({ userId }, { token });
   }
 }
