@@ -77,7 +77,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 15,
     });
 
-    res.status(HttpStatus.OK).json({ accessToken });
+    res.status(HttpStatus.OK).send();
   }
 
   @Get('refresh')
@@ -103,6 +103,15 @@ export class AuthController {
 
     const accessToken = await this.authService.generateAccessToken(payload);
 
-    res.status(HttpStatus.OK).send({ accessToken });
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      signed: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 1000 * 60 * 15,
+    });
+
+    res.status(HttpStatus.OK).send();
   }
 }
