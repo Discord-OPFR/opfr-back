@@ -8,8 +8,12 @@ export class Auth {
   @Prop({ required: true, unique: true })
   userId!: string;
 
-  @Prop({ required: true })
-  token!: string;
+  @Prop({ required: true, type: Object })
+  discordToken!: {
+    iv: string;
+    authTag: string;
+    value: string;
+  };
 
   @Prop({ required: true })
   refreshToken!: string;

@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 
-import { Auth } from './schemas/auth.schema';
+import { CryptoService } from './storage/crypto.service';
 import { StorageService } from './storage/storage.service';
 
 @Injectable()
@@ -17,6 +17,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly storageService: StorageService,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   async getToken(code: string): Promise<string> {
@@ -56,48 +57,58 @@ export class AuthService {
     return result.access_token;
   }
 
-  async generateAccessToken(member: Auth): Promise<string> {
+  generateAccessToken(userId: string): string {
     const JWT_SECRET = this.configService.get<string>('JWT_SECRET');
 
     if (!JWT_SECRET) throw new InternalServerErrorException();
 
-    return this.jwtService.sign(member, {
-      secret: JWT_SECRET,
-      expiresIn: '15m',
-    });
+    return this.jwtService.sign(
+      { userId },
+      {
+        secret: JWT_SECRET,
+        expiresIn: '15m',
+      },
+    );
   }
 
-  async generateRefreshToken(userId: string, token: string): Promise<string> {
+  generateRefreshToken(userId: string): string {
     const REFRESH_JWT_SECRET =
       this.configService.get<string>('REFRESH_JWT_SECRET');
 
     if (!REFRESH_JWT_SECRET) throw new InternalServerErrorException();
 
-    const refreshToken = this.jwtService.sign(
-      { userId, token },
+    return this.jwtService.sign(
+      { userId },
       {
         secret: REFRESH_JWT_SECRET,
         expiresIn: '30d',
       },
     );
+  }
 
+  async storeAuth(
+    userId: string,
+    refreshToken: string,
+    discordToken: string,
+  ): Promise<void> {
     const hash = await bcrypt.hash(refreshToken, 10);
     const refreshAlreadyExists = await this.storageService.exists(userId);
+    const encryptedToken = this.cryptoService.encrypt(discordToken);
 
     if (refreshAlreadyExists) {
-      await this.storageService.updateByUserId(userId, refreshToken);
+      await this.storageService.updateAuth(userId, {
+        $set: { refreshToken: refreshToken },
+      });
     } else {
       await this.storageService.create({
         userId,
-        token,
+        discordToken: encryptedToken,
         refreshToken: hash,
       });
     }
-
-    return refreshToken;
   }
 
-  async verifyRefreshToken(refreshToken: string): Promise<Auth> {
+  async verifyRefreshToken(refreshToken: string): Promise<string> {
     const REFRESH_JWT_SECRET =
       this.configService.get<string>('REFRESH_JWT_SECRET');
 
@@ -108,19 +119,15 @@ export class AuthService {
         secret: REFRESH_JWT_SECRET,
       });
 
-      return {
-        userId: payload.userId,
-        token: payload.token,
-        refreshToken: payload.refreshToken,
-      };
+      return payload.userId;
     } catch (error) {
       console.error('Error', error);
       throw new UnauthorizedException('Invalid token');
     }
   }
 
-  async rotateToken(payload: Auth, refreshToken: string) {
-    const auth = await this.storageService.findByUserId(payload.userId);
+  async rotateToken(userId: string, refreshToken: string) {
+    const auth = await this.storageService.findByUserId(userId);
 
     if (!auth) throw new UnauthorizedException('Invalid token');
 
@@ -128,8 +135,11 @@ export class AuthService {
 
     if (!isValid) throw new UnauthorizedException('Invalid token');
 
-    await this.storageService.deleteByUserId(payload.userId);
+    const newRefreshToken = this.generateRefreshToken(userId);
+    await this.storageService.updateAuth(userId, {
+      $set: { refreshToken: newRefreshToken },
+    });
 
-    return this.generateRefreshToken(payload.userId, payload.token);
+    return newRefreshToken;
   }
 }

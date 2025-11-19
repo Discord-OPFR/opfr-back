@@ -9,16 +9,18 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 import { ApiOkResponse } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 
 import { DiscordService } from '../discord/discord.service';
 import { AuthService } from './auth.service';
 import { UserDto } from './dto/user.dto';
-import { Auth } from './schemas/auth.schema';
+import { AuthGuard } from './guards/auth.guard';
+import { CryptoService } from './storage/crypto.service';
+import { StorageService } from './storage/storage.service';
 
 @Controller('auth')
 export class AuthController {
@@ -26,29 +28,26 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
     private readonly discordService: DiscordService,
-    private jwtService: JwtService,
+    private readonly storageService: StorageService,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   @Get('me')
+  @UseGuards(AuthGuard)
   @ApiOkResponse({ type: UserDto })
   async me(@Req() req: Request, @Res() res: Response) {
-    const refreshToken = req.signedCookies['refresh_token'];
+    const authDoc = await this.storageService.findByUserId(req.userId!);
 
-    if (!refreshToken)
-      throw new UnauthorizedException('Missing or invalid refresh token');
+    if (!authDoc) throw new NotFoundException();
 
-    try {
-      const { token } = await this.authService.verifyRefreshToken(refreshToken);
-      const member = await this.discordService.getMemberMe(token);
+    const discordToken = this.cryptoService.decrypt(authDoc.discordToken);
+    const member = await this.discordService.getMemberMe(discordToken);
 
-      res.status(HttpStatus.OK).json({
-        userId: member.user.id,
-        username: member.user.username,
-        avatar: member.user.avatar,
-      });
-    } catch {
-      throw new NotFoundException();
-    }
+    res.status(HttpStatus.OK).json({
+      userId: member.user.id,
+      username: member.user.username,
+      avatar: member.user.avatar,
+    });
   }
 
   @Get('login')
@@ -80,18 +79,10 @@ export class AuthController {
 
     if (!hasRoles) throw new ForbiddenException();
 
-    const refreshToken = await this.authService.generateRefreshToken(
-      member.user.id,
-      token,
-    );
+    const refreshToken = this.authService.generateRefreshToken(member.user.id);
+    const accessToken = this.authService.generateAccessToken(member.user.id);
 
-    const payload: Auth = {
-      userId: member.user.id,
-      token,
-      refreshToken,
-    };
-
-    const accessToken = await this.authService.generateAccessToken(payload);
+    await this.authService.storeAuth(member.user.id, refreshToken, token);
 
     const NODE_ENV = this.configService.get<string>('NODE_ENV');
 
@@ -123,12 +114,15 @@ export class AuthController {
     if (!refreshToken)
       throw new UnauthorizedException('Missing or invalid refresh token');
 
-    const payload = await this.authService.verifyRefreshToken(refreshToken);
-    const newToken = await this.authService.rotateToken(payload, refreshToken);
+    const userId = await this.authService.verifyRefreshToken(refreshToken);
+    const newRefreshToken = await this.authService.rotateToken(
+      userId,
+      refreshToken,
+    );
 
     const NODE_ENV = this.configService.get<string>('NODE_ENV');
 
-    res.cookie('refresh_token', newToken, {
+    res.cookie('refresh_token', newRefreshToken, {
       httpOnly: true,
       signed: true,
       secure: NODE_ENV === 'production',
@@ -137,7 +131,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
 
-    const accessToken = await this.authService.generateAccessToken(payload);
+    const accessToken = this.authService.generateAccessToken(userId);
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,

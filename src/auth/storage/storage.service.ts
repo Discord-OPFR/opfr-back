@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ProjectionType, RootFilterQuery } from 'mongoose';
+import {
+  Model,
+  ProjectionType,
+  RootFilterQuery,
+  UpdateQuery,
+  UpdateWithAggregationPipeline,
+} from 'mongoose';
 
 import { Auth, AuthDocument } from '../schemas/auth.schema';
 
@@ -39,5 +45,12 @@ export class StorageService {
 
   async updateByUserId(userId: string, token: string) {
     return this.authModel.updateOne({ userId }, { refreshToken: token });
+  }
+
+  async updateAuth(
+    userId: string,
+    update: UpdateQuery<AuthDocument> | UpdateWithAggregationPipeline,
+  ) {
+    await this.authModel.updateOne({ userId }, update);
   }
 }
