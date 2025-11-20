@@ -90,7 +90,7 @@ export class AuthController {
       httpOnly: true,
       signed: true,
       secure: NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: 'lax',
       path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
@@ -99,7 +99,7 @@ export class AuthController {
       httpOnly: true,
       signed: true,
       secure: NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: 'lax',
       path: '/',
       maxAge: 1000 * 60 * 15,
     });
@@ -126,7 +126,7 @@ export class AuthController {
       httpOnly: true,
       signed: true,
       secure: NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: 'lax',
       path: '/auth/refresh',
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
@@ -137,7 +137,7 @@ export class AuthController {
       httpOnly: true,
       signed: true,
       secure: NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: 'lax',
       path: '/',
       maxAge: 1000 * 60 * 15,
     });
