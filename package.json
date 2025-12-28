@@ -30,7 +30,7 @@
     "@nestjs/swagger": "11.2.2",
     "@opfr/definitions": "1.1.2",
     "@opfr/emojis": "1.0.1",
-    "@opfr/services": "file:../ui-kit/packages/services",
+    "@opfr/services": "1.0.5",
     "@opfr/utils-lang": "1.0.2",
     "@opfr/utils-type": "1.0.1",
     "bcrypt": "6.0.0",
