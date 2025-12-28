@@ -15,7 +15,6 @@ export class EntityService {
   }
 
   async getItem(id: string) {
-    console.log(id);
     try {
       const item = await entityService.get(id);
 

@@ -19,6 +19,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@opfr/services": ["../ui-kit/packages/services/dist"]
+    }
   }
 }
