@@ -21,7 +21,7 @@
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@opfr/services": ["../ui-kit/packages/services/dist"]
+      "@common/*": ["./src/common/*"]
     }
   }
 }
