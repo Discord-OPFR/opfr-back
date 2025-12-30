@@ -5,8 +5,9 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
-import { connectToServices } from '@opfr/services';
 import cookieParser from 'cookie-parser';
+
+import { connectToServices } from '@opfr/services';
 
 import { AppModule } from './app.module';
 

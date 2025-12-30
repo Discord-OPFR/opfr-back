@@ -16,8 +16,14 @@ export function ApiNumberOrTuple(options?: NumberOrTupleOptions) {
       type: 'number',
       oneOf: [
         { type: 'number', example: options?.exampleValue ?? 30 },
-        { type: 'array', items: { type: 'number'}, maxItems: 2, minItems: 2, example: options?.exampleRange ?? [10, 20] },
+        {
+          type: 'array',
+          items: { type: 'number' },
+          maxItems: 2,
+          minItems: 2,
+          example: options?.exampleRange ?? [10, 20],
+        },
       ],
-    })
+    }),
   );
 }
