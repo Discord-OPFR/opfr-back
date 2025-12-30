@@ -1,23 +1,33 @@
 import { IsCharacteristicsValid } from '@common/decorator';
+import { ApiCharacteristics } from '@common/decorator/swagger/characteristics.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsEnum,
+  IsIn,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 import {
   Buff,
   Characteristic,
+  ENTITY_IMAGE_IDS,
   Effect,
   type EntityCategory,
   type EntityImageId,
   type EntityType,
   RankId,
   type ShopOptions,
-  type UsageOptions
+  type UsageOptions,
 } from '@opfr/definitions';
+
+import { ENTITY_CATEGORY, ENTITY_TYPES } from '../../constants';
 import { BottleDTO } from '../bottle.dto';
 import { DescriptionDTO } from '../description.dto';
 import { EffectDTO } from '../effect.dto';
-
 import { NameDTO } from '../name.dto';
 import { ShopDTO } from '../shop.dto';
 import { UsageDTO } from '../usage.dto';
@@ -38,19 +48,23 @@ export class CreateEntityDto {
   @Type(() => DescriptionDTO)
   description?: DescriptionDTO;
 
-  // @ApiProperty({ type: 'string' })
-  @IsString() //Il faudrait une constante avec tous les types possibles dedans pour pouvoir protéger correctement
+  @ApiProperty({ enum: ENTITY_TYPES, example: 'object' })
+  @IsIn(ENTITY_TYPES)
   type!: EntityType;
 
-  // @ApiProperty({ type: 'string' })
-  @IsString()// Same shit
+  @ApiProperty({ enum: ENTITY_IMAGE_IDS })
+  @IsIn(ENTITY_IMAGE_IDS)
   image!: EntityImageId;
 
-  @ApiProperty({ type: 'string' })
+  @ApiProperty({
+    type: 'string',
+    example: '<:bottle_xp_2:1243980696083632208>',
+  })
   @IsString()
   emojis!: string;
 
-  @IsString() // même chose que les types
+  @ApiProperty({ enum: ENTITY_CATEGORY, example: 'item' })
+  @IsIn(ENTITY_CATEGORY)
   category!: EntityCategory;
 
   @ApiProperty({ type: EffectDTO })
@@ -88,7 +102,7 @@ export class CreateEntityDto {
   @IsNumber()
   ms?: number;
 
-  //Faut faire le swagger
+  @ApiCharacteristics()
   @IsOptional()
   @IsCharacteristicsValid()
   characteristics?: Partial<Record<Characteristic, [number, number] | number>>;

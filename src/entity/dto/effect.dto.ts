@@ -10,5 +10,5 @@ export class EffectDTO {
 
   @ApiProperty() //Jsp ce que jdois typer frr
   @IsObject()
-  params!: Record<string, any>;
+  params!: Record<string, unknown>;
 }

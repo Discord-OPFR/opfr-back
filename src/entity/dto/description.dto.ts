@@ -2,7 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 export class DescriptionDTO {
-  @ApiProperty({ type: String })
+  @ApiProperty({
+    type: String,
+    example: 'equipments.adventurer.strap.description',
+  })
   @IsString()
   key!: string;
 

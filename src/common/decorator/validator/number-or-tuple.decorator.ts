@@ -8,7 +8,7 @@ export function IsNumberOrTuple(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any) {
+        validate(value: unknown) {
           if (typeof value === 'number') return true;
           if (Array.isArray(value) && value.length === 2) {
             return value.every(v => typeof v === 'number');

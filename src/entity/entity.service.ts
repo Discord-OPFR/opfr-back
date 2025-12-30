@@ -1,13 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 
 import { entityService } from '@opfr/services';
+
+import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
+import { CreateItemDto } from './dto/create/create-item.dto';
 import { UpdateEquipmentDto } from './dto/update/update-equipment.dto';
 import { UpdateItemDto } from './dto/update/update-item.dto';
 
 @Injectable()
 export class EntityService {
-  getAllEntity() {
-    return entityService.getAll();
+  async getAllEntity() {
+    try {
+      return entityService.getAll();
+    } catch {
+      throw new BadGatewayException();
+    }
   }
 
   async getAllItems() {
@@ -20,6 +31,18 @@ export class EntityService {
     const entities = await entityService.getAll();
 
     return entities.filter(e => entityService.isEquipment(e));
+  }
+
+  async getEntity(id: string) {
+    try {
+      const entity = await entityService.get(id);
+
+      if (!entity) return null;
+
+      return entity;
+    } catch {
+      return null;
+    }
   }
 
   async getItem(id: string) {
@@ -64,35 +87,33 @@ export class EntityService {
     return equipment !== null;
   }
 
-  async updateEntity(id: string, updateItemDto: UpdateItemDto | UpdateEquipmentDto) {
+  async updateEntity(
+    id: string,
+    updateItemDto: UpdateItemDto | UpdateEquipmentDto,
+  ) {
     try {
-      const flattenObject = (
-        obj: Record<string, any>,
-        parentKey = '',
-        result: Record<string, any> = {}
-      )=> {
-        for (const [key, value] of Object.entries(obj)) {
-          if (!value) continue;
-
-          const newKey = parentKey ? `${parentKey}.${key}` : key;
-
-          if (typeof value === 'object' && !Array.isArray(value)) {
-            flattenObject(value, newKey, result);
-          } else {
-            result[newKey] = value;
-          }
-        }
-
-        return result;
-      };
-
-      const updates = flattenObject(updateItemDto);
-
-      await entityService.update({ entityId: id}, {
-        $set: updates
-      });
+      return entityService.update(
+        { entityId: id },
+        {
+          $set: updateItemDto,
+        },
+      );
     } catch (e) {
       console.error(e);
+      throw new BadGatewayException();
+    }
+  }
+
+  async createEntity(createItemDto: CreateItemDto | CreateEquipmentDto) {
+    try {
+      return entityService.createInDb(createItemDto);
+    } catch (e) {
+      if (e && typeof e === 'object' && 'code' in e && e.code === 11000) {
+        throw new ConflictException();
+      }
+      console.error(e);
+
+      throw new BadGatewayException();
     }
   }
 }

@@ -1,8 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { ApiNumberOrTuple } from '@common/decorator';
 import { IsNumberOrNull, IsNumberOrTuple } from '@common/decorator';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsIn, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsIn,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 import { Buff, type BuffOrigin, type BuffTreePath } from '@opfr/definitions';
 
@@ -11,7 +18,7 @@ class BuffDTO {
   @IsObject()
   target!: BuffTreePath;
 
-  @ApiProperty({ type: 'number' })
+  @ApiProperty({ type: 'number', example: 1.2 })
   @IsNumber()
   multiplier!: number;
 
@@ -19,11 +26,11 @@ class BuffDTO {
   @IsString()
   origin!: BuffOrigin;
 
-  @ApiProperty({ type: 'number', nullable: true, example : 61000 })
+  @ApiProperty({ type: 'number', nullable: true, example: 2 })
   @IsNumberOrNull()
   startIn!: number | null;
 
-  @ApiProperty({ type: 'number', nullable: true })
+  @ApiProperty({ type: 'number', nullable: true, example: 12 })
   @IsNumberOrNull()
   endIn!: number | null;
 }

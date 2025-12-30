@@ -1,22 +1,39 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsCharacteristicsValid } from '@common/decorator';
-import { Equals, IsNumber, IsString } from 'class-validator';
+import { ApiCharacteristics } from '@common/decorator/swagger/characteristics.decorator';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { Equals, IsIn, IsNumber, IsString } from 'class-validator';
 
-import type { Characteristic, EquipmentImageId, EquipmentType } from '@opfr/definitions';
+import {
+  Characteristic,
+  EQUIPMENT_IMAGE_IDS,
+  EQUIPMENT_TYPE,
+  type EquipmentImageId,
+  type EquipmentType,
+} from '@opfr/definitions';
 
 import { CreateEntityDto } from './create-entity.dto';
 
-export class CreateEquipmentDto extends OmitType(CreateEntityDto, ['type', 'image', 'category', 'characteristics', 'level', 'panoply'] as const) {
-  @IsString() //encore et tjr
+export class CreateEquipmentDto extends OmitType(CreateEntityDto, [
+  'type',
+  'image',
+  'category',
+  'characteristics',
+  'level',
+  'panoply',
+] as const) {
+  @ApiProperty({ enum: EQUIPMENT_TYPE })
+  @IsIn(EQUIPMENT_TYPE)
   type!: EquipmentType;
 
-  @IsString()
+  @ApiProperty({ enum: EQUIPMENT_IMAGE_IDS })
+  @IsIn(EQUIPMENT_IMAGE_IDS)
   image!: EquipmentImageId;
 
-  @ApiProperty({ example: 'equipment', enum: ['equipment']})
+  @ApiProperty({ example: 'equipment', enum: ['equipment'] })
   @Equals('equipment')
   category!: 'equipment';
 
+  @ApiCharacteristics()
   @IsCharacteristicsValid()
   characteristics!: Partial<Record<Characteristic, [number, number] | number>>;
 

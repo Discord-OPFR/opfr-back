@@ -7,14 +7,14 @@ import {
 import { CHARACTERISTICS } from '@opfr/definitions';
 
 export function IsCharacteristicsValid(validationOptions?: ValidationOptions) {
-  return function (object: any, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isCharacteristicsValid',
       target: object.constructor,
       propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any) {
+        validate(value: unknown) {
           if (!value) return true; // optional
           if (typeof value !== 'object') return false;
 

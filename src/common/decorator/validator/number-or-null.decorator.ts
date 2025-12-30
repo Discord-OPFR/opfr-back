@@ -8,7 +8,7 @@ export function IsNumberOrNull(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any) {
+        validate(value: unknown) {
           return value === null || typeof value === 'number';
         },
         defaultMessage() {
