@@ -15,7 +15,7 @@ export function IsCharacteristicsValid(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: unknown) {
-          if (!value) return true; // optional
+          if (!value) return true;
           if (typeof value !== 'object') return false;
 
           return Object.entries(value).every(([key, val]) => {

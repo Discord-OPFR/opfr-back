@@ -1,5 +1,3 @@
-import { ApiNumberOrTuple } from '@common/decorator';
-import { IsNumberOrNull, IsNumberOrTuple } from '@common/decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
@@ -12,6 +10,9 @@ import {
 } from 'class-validator';
 
 import { Buff, type BuffOrigin, type BuffTreePath } from '@opfr/definitions';
+
+import { ApiNumberOrTuple } from '../../shared/decorator';
+import { IsNumberOrNull, IsNumberOrTuple } from '../../shared/decorator';
 
 class BuffDTO {
   @ApiProperty()

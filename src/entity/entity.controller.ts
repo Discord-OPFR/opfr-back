@@ -1,23 +1,19 @@
-import { OPFRBadGatewayResponse } from '@common/decorator/swagger/bad-gateway.decorator';
-import { OPFRBadRequestResponse } from '@common/decorator/swagger/bad-request.decorator';
-import { OPFRConflictResponse } from '@common/decorator/swagger/conflict.decorator';
-import { OPFRNotFoundResponse } from '@common/decorator/swagger/not-found.decorator';
+import { AuthGuard } from '@auth/guards/auth.guard';
 import {
   Body,
   Controller,
   Get,
-  HttpStatus,
-  NotFoundException,
   Param,
   Post,
   Put,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import type { Response } from 'express';
+import { OPFRBadGatewayResponse } from '@shared/decorator';
+import { OPFRBadRequestResponse } from '@shared/decorator';
+import { OPFRConflictResponse } from '@shared/decorator';
+import { OPFRNotFoundResponse } from '@shared/decorator';
 
-import { AuthGuard } from '../auth/guards/auth.guard';
 import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
 import { CreateItemDto } from './dto/create/create-item.dto';
 import { ResponseEntityDto } from './dto/response/response-entity.dto';
@@ -26,6 +22,8 @@ import { ResponseItemDto } from './dto/response/response-item.dto';
 import { UpdateEquipmentDto } from './dto/update/update-equipment.dto';
 import { UpdateItemDto } from './dto/update/update-item.dto';
 import { EntityService } from './entity.service';
+import { EquipmentNotFoundException } from './errors/EquipmentNotFound';
+import { ItemNotFoundException } from './errors/ItemNotFound';
 
 @Controller('entity')
 @UseGuards(AuthGuard)
@@ -65,14 +63,14 @@ export class EntityController {
   @OPFRNotFoundResponse()
   @ApiOkResponse({ type: ResponseItemDto })
   @OPFRBadGatewayResponse()
-  @Put('/item/:id')
+  @Put('/item/:entityId')
   async updateItem(
-    @Param('id') id: string,
+    @Param('entityId') id: string,
     @Body() updateItemDto: UpdateItemDto,
   ) {
-    if (!(await this.entityService.isItem(id))) throw new NotFoundException();
+    if (!(await this.entityService.isItem(id)))
+      throw new ItemNotFoundException(id);
 
-    console.log('updateItem', id, updateItemDto);
     return this.entityService.updateEntity(id, updateItemDto);
   }
 
@@ -84,29 +82,40 @@ export class EntityController {
   }
 
   @OPFRBadGatewayResponse()
-  @ApiOkResponse({ type: ResponseItemDto })
+  @ApiOkResponse({ type: ResponseEquipmentDTO })
   @OPFRNotFoundResponse()
-  @Put('/equipment/:id')
+  @Put('/equipment/:entityId')
   async updateEquipment(
-    @Param('id') id: string,
+    @Param('entityId') id: string,
     @Body() updateEquipmentDto: UpdateEquipmentDto,
   ) {
     if (!(await this.entityService.isEquipment(id)))
-      throw new NotFoundException(`Equipment with id ${id} not found.`);
+      throw new EquipmentNotFoundException(id);
 
     return this.entityService.updateEntity(id, updateEquipmentDto);
   }
 
   @OPFRNotFoundResponse()
-  @ApiOkResponse({ type: [ResponseItemDto] })
-  @Get(':id')
-  async getById(@Param('id') id: string, @Res() res: Response) {
-    const entity = await this.entityService.getEntity(id);
+  @OPFRBadGatewayResponse()
+  @ApiOkResponse({ type: [ResponseEntityDto] })
+  @Get(':entityId')
+  async getById(@Param('entityId') id: string) {
+    return this.entityService.getEntity(id);
+  }
 
-    if (!entity) {
-      throw new NotFoundException(`Entity with id ${id} not found`);
-    }
+  @OPFRNotFoundResponse()
+  @OPFRBadGatewayResponse()
+  @ApiOkResponse({ type: ResponseItemDto })
+  @Get('/item/:entityId')
+  async getItemById(@Param('entityId') id: string) {
+    return this.entityService.getItem(id);
+  }
 
-    res.status(HttpStatus.OK).send(entity);
+  @OPFRNotFoundResponse()
+  @OPFRBadGatewayResponse()
+  @ApiOkResponse({ type: ResponseItemDto })
+  @Get('/equipment/:entityId')
+  async getEquipmentById(@Param('entityId') id: string) {
+    return this.entityService.getEquipment(id);
   }
 }

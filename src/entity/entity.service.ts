@@ -10,6 +10,9 @@ import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
 import { CreateItemDto } from './dto/create/create-item.dto';
 import { UpdateEquipmentDto } from './dto/update/update-equipment.dto';
 import { UpdateItemDto } from './dto/update/update-item.dto';
+import { EntityNotFoundException } from './errors/EntityNotFound';
+import { EquipmentNotFoundException } from './errors/EquipmentNotFound';
+import { ItemNotFoundException } from './errors/ItemNotFound';
 
 @Injectable()
 export class EntityService {
@@ -37,11 +40,15 @@ export class EntityService {
     try {
       const entity = await entityService.get(id);
 
-      if (!entity) return null;
+      if (!entity) throw new EntityNotFoundException(id);
 
       return entity;
-    } catch {
-      return null;
+    } catch (err) {
+      if (err instanceof EntityNotFoundException) {
+        throw err;
+      }
+
+      throw new BadGatewayException();
     }
   }
 
@@ -50,13 +57,16 @@ export class EntityService {
       const item = await entityService.get(id);
 
       if (!item || !entityService.isItem(item)) {
-        return null;
+        throw new ItemNotFoundException(id);
       }
 
       return item;
-    } catch (e) {
-      console.error(e);
-      return null;
+    } catch (err) {
+      if (err instanceof ItemNotFoundException) {
+        throw err;
+      }
+
+      throw new BadGatewayException();
     }
   }
 
@@ -65,13 +75,16 @@ export class EntityService {
       const equipment = await entityService.get(id);
 
       if (!equipment || !entityService.isEquipment(equipment)) {
-        return null;
+        throw new EquipmentNotFoundException(id);
       }
 
       return equipment;
-    } catch (e) {
-      console.error(e);
-      return null;
+    } catch (err) {
+      if (err instanceof EquipmentNotFoundException) {
+        throw err;
+      }
+
+      throw new BadGatewayException();
     }
   }
 
@@ -98,8 +111,7 @@ export class EntityService {
           $set: updateItemDto,
         },
       );
-    } catch (e) {
-      console.error(e);
+    } catch {
       throw new BadGatewayException();
     }
   }
@@ -111,8 +123,6 @@ export class EntityService {
       if (e && typeof e === 'object' && 'code' in e && e.code === 11000) {
         throw new ConflictException();
       }
-      console.error(e);
-
       throw new BadGatewayException();
     }
   }

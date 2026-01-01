@@ -21,7 +21,8 @@
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@common/*": ["./src/common/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@auth/*": ["./src/auth/*"]
     }
   }
 }

@@ -12,7 +12,7 @@ export function OPFRBadGatewayResponse(options?: OPFRBadGatewayOptions) {
         type: 'object',
         properties: {
           message: { type: 'array', items: { type: 'string' } },
-          error: { enum: ['Bad Request'] },
+          error: { enum: ['Bad Gateway'] },
           statusCode: { enum: [502] },
         },
       },
