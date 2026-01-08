@@ -4,12 +4,13 @@ import { IsIn } from 'class-validator';
 
 import {
   EntityCategory,
+  ITEM_CATEGORY,
   ITEM_IMAGE_IDS,
+  ITEM_TYPE,
   type ItemImageId,
   type ItemType,
 } from '@opfr/definitions';
 
-import { ITEM_CATEGORY, ITEM_TYPES } from '../../constants';
 import { CreateEntityDto } from './create-entity.dto';
 
 export class CreateItemDto extends OmitType(CreateEntityDto, [
@@ -17,8 +18,8 @@ export class CreateItemDto extends OmitType(CreateEntityDto, [
   'image',
   'category',
 ] as const) {
-  @ApiProperty({ enum: ITEM_TYPES, example: 'object' })
-  @IsIn(ITEM_TYPES)
+  @ApiProperty({ enum: ITEM_TYPE, example: 'object' })
+  @IsIn(ITEM_TYPE)
   type!: ItemType;
 
   @ApiProperty({ enum: ITEM_IMAGE_IDS, example: 'wood' })

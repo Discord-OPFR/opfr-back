@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsCharacteristicsValid } from '@shared/decorator';
+import { ApiCharacteristics } from '@shared/decorator';
 import { Type } from 'class-transformer';
 import {
   IsEnum,
@@ -12,7 +14,9 @@ import {
 import {
   Buff,
   Characteristic,
+  ENTITY_CATEGORY,
   ENTITY_IMAGE_IDS,
+  ENTITY_TYPES,
   Effect,
   type EntityCategory,
   type EntityImageId,
@@ -22,9 +26,6 @@ import {
   type UsageOptions,
 } from '@opfr/definitions';
 
-import { IsCharacteristicsValid } from '../../../shared/decorator';
-import { ApiCharacteristics } from '../../../shared/decorator/swagger/characteristics.decorator';
-import { ENTITY_CATEGORY, ENTITY_TYPES } from '../../constants';
 import { BottleDTO } from '../bottle.dto';
 import { DescriptionDTO } from '../description.dto';
 import { EffectDTO } from '../effect.dto';

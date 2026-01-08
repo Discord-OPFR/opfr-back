@@ -1,4 +1,6 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { IsCharacteristicsValid } from '@shared/decorator';
+import { ApiCharacteristics } from '@shared/decorator';
 import { Equals, IsIn, IsNumber, IsString } from 'class-validator';
 
 import {
@@ -9,8 +11,6 @@ import {
   type EquipmentType,
 } from '@opfr/definitions';
 
-import { IsCharacteristicsValid } from '../../../shared/decorator';
-import { ApiCharacteristics } from '../../../shared/decorator/swagger/characteristics.decorator';
 import { CreateEntityDto } from './create-entity.dto';
 
 export class CreateEquipmentDto extends OmitType(CreateEntityDto, [
