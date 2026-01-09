@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsCharacteristicsValid } from '@shared/decorator';
-import { ApiCharacteristics } from '@shared/decorator';
+import { DocCharacteristics } from '@shared/decorator';
 import { Type } from 'class-transformer';
 import {
   IsEnum,
@@ -103,7 +103,7 @@ export class CreateEntityDto {
   @IsNumber()
   ms?: number;
 
-  @ApiCharacteristics()
+  @DocCharacteristics()
   @IsOptional()
   @IsCharacteristicsValid()
   characteristics?: Partial<Record<Characteristic, [number, number] | number>>;

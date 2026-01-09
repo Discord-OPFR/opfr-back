@@ -5,7 +5,7 @@ interface OPFRBadRequestOptions {
   description?: string;
 }
 
-export function OPFRBadRequestResponse(options?: OPFRBadRequestOptions) {
+export function DocBadRequestResponse(options?: OPFRBadRequestOptions) {
   return applyDecorators(
     ApiBadRequestResponse({
       schema: {

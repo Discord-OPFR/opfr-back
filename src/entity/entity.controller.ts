@@ -9,10 +9,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
-import { OPFRBadGatewayResponse } from '@shared/decorator';
-import { OPFRBadRequestResponse } from '@shared/decorator';
-import { OPFRConflictResponse } from '@shared/decorator';
-import { OPFRNotFoundResponse } from '@shared/decorator';
+import { DocBadGatewayResponse } from '@shared/decorator';
+import { DocBadRequestResponse } from '@shared/decorator';
+import { DocConflictResponse } from '@shared/decorator';
+import { DocNotFoundResponse } from '@shared/decorator';
 
 import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
 import { CreateItemDto } from './dto/create/create-item.dto';
@@ -32,37 +32,37 @@ export class EntityController {
 
   @Post('/item')
   @ApiCreatedResponse({ type: ResponseItemDto })
-  @OPFRBadRequestResponse()
-  @OPFRConflictResponse()
+  @DocBadRequestResponse()
+  @DocConflictResponse()
   async createItem(@Body() createItemDto: CreateItemDto) {
     return this.entityService.createEntity(createItemDto);
   }
 
   @Post('/equipment')
   @ApiCreatedResponse({ type: ResponseEquipmentDTO })
-  @OPFRBadRequestResponse()
-  @OPFRConflictResponse()
+  @DocBadRequestResponse()
+  @DocConflictResponse()
   async createEquipment(@Body() createEquipmentDto: CreateEquipmentDto) {
     return this.entityService.createEntity(createEquipmentDto);
   }
 
   @Get()
   @ApiOkResponse({ type: [ResponseEntityDto] })
-  @OPFRBadGatewayResponse()
+  @DocBadGatewayResponse()
   async getAll() {
     return this.entityService.getAllEntity();
   }
 
   @ApiOkResponse({ type: [ResponseItemDto] })
   @Get('/item')
-  @OPFRBadGatewayResponse()
+  @DocBadGatewayResponse()
   async getAllItems() {
     return this.entityService.getAllItems();
   }
 
-  @OPFRNotFoundResponse()
+  @DocNotFoundResponse()
   @ApiOkResponse({ type: ResponseItemDto })
-  @OPFRBadGatewayResponse()
+  @DocBadGatewayResponse()
   @Put('/item/:entityId')
   async updateItem(
     @Param('entityId') id: string,
@@ -74,16 +74,16 @@ export class EntityController {
     return this.entityService.updateEntity(id, updateItemDto);
   }
 
-  @OPFRBadGatewayResponse()
+  @DocBadGatewayResponse()
   @ApiOkResponse({ type: [ResponseEquipmentDTO] })
   @Get('/equipment/')
   async getAllEquipments() {
     return this.entityService.getAllEquipments();
   }
 
-  @OPFRBadGatewayResponse()
+  @DocBadGatewayResponse()
   @ApiOkResponse({ type: ResponseEquipmentDTO })
-  @OPFRNotFoundResponse()
+  @DocNotFoundResponse()
   @Put('/equipment/:entityId')
   async updateEquipment(
     @Param('entityId') id: string,
@@ -95,24 +95,24 @@ export class EntityController {
     return this.entityService.updateEntity(id, updateEquipmentDto);
   }
 
-  @OPFRNotFoundResponse()
-  @OPFRBadGatewayResponse()
+  @DocNotFoundResponse()
+  @DocBadGatewayResponse()
   @ApiOkResponse({ type: [ResponseEntityDto] })
   @Get(':entityId')
   async getById(@Param('entityId') id: string) {
     return this.entityService.getEntity(id);
   }
 
-  @OPFRNotFoundResponse()
-  @OPFRBadGatewayResponse()
+  @DocNotFoundResponse()
+  @DocBadGatewayResponse()
   @ApiOkResponse({ type: ResponseItemDto })
   @Get('/item/:entityId')
   async getItemById(@Param('entityId') id: string) {
     return this.entityService.getItem(id);
   }
 
-  @OPFRNotFoundResponse()
-  @OPFRBadGatewayResponse()
+  @DocNotFoundResponse()
+  @DocBadGatewayResponse()
   @ApiOkResponse({ type: ResponseItemDto })
   @Get('/equipment/:entityId')
   async getEquipmentById(@Param('entityId') id: string) {

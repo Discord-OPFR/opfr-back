@@ -8,7 +8,7 @@ interface NumberOrTupleOptions {
   required?: boolean;
 }
 
-export function ApiNumberOrTuple(options?: NumberOrTupleOptions) {
+export function DocNumberOrTuple(options?: NumberOrTupleOptions) {
   return applyDecorators(
     ApiProperty({
       description: options?.description || 'Number or Tuple',

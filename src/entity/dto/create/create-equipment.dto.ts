@@ -1,6 +1,6 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsCharacteristicsValid } from '@shared/decorator';
-import { ApiCharacteristics } from '@shared/decorator';
+import { DocCharacteristics } from '@shared/decorator';
 import { Equals, IsIn, IsNumber, IsString } from 'class-validator';
 
 import {
@@ -33,7 +33,7 @@ export class CreateEquipmentDto extends OmitType(CreateEntityDto, [
   @Equals('equipment')
   category!: 'equipment';
 
-  @ApiCharacteristics()
+  @DocCharacteristics()
   @IsCharacteristicsValid()
   characteristics!: Partial<Record<Characteristic, [number, number] | number>>;
 

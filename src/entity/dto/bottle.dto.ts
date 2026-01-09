@@ -11,7 +11,7 @@ import {
 
 import { Buff, type BuffOrigin, type BuffTreePath } from '@opfr/definitions';
 
-import { ApiNumberOrTuple } from '../../shared/decorator';
+import { DocNumberOrTuple } from '../../shared/decorator';
 import { IsNumberOrNull, IsNumberOrTuple } from '../../shared/decorator';
 
 class BuffDTO {
@@ -37,7 +37,7 @@ class BuffDTO {
 }
 
 export class BottleDTO {
-  @ApiNumberOrTuple()
+  @DocNumberOrTuple()
   @IsNumberOrTuple()
   xp!: [number, number] | number;
 

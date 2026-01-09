@@ -1,6 +1,6 @@
-export { ApiNumberOrTuple } from './number-or-tuple.decorator';
-export { OPFRBadGatewayResponse } from './bad-gateway.decorator';
-export { OPFRBadRequestResponse } from './bad-request.decorator';
-export { OPFRConflictResponse } from './conflict.decorator';
-export { OPFRNotFoundResponse } from './not-found.decorator';
-export { ApiCharacteristics } from './characteristics.decorator';
+export { DocNumberOrTuple } from './number-or-tuple.decorator';
+export { DocBadGatewayResponse } from './bad-gateway.decorator';
+export { DocBadRequestResponse } from './bad-request.decorator';
+export { DocConflictResponse } from './conflict.decorator';
+export { DocNotFoundResponse } from './not-found.decorator';
+export { DocCharacteristics } from './characteristics.decorator';

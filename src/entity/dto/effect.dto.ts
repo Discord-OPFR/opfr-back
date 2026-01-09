@@ -8,7 +8,7 @@ export class EffectDTO {
   @IsIn(EFFECT_KEYS)
   type!: string;
 
-  @ApiProperty() //Jsp ce que jdois typer frr
+  @ApiProperty()
   @IsObject()
   params!: Record<string, unknown>;
 }

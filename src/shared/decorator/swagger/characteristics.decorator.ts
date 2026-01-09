@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { CHARACTERISTICS } from '@opfr/definitions';
 
-export function ApiCharacteristics() {
+export function DocCharacteristics() {
   return applyDecorators(
     ApiProperty({
       type: 'object',

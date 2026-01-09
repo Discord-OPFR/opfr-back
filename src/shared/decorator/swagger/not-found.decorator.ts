@@ -5,7 +5,7 @@ interface OPFRNotFoundOptions {
   description?: string;
 }
 
-export function OPFRNotFoundResponse(options?: OPFRNotFoundOptions) {
+export function DocNotFoundResponse(options?: OPFRNotFoundOptions) {
   return applyDecorators(
     ApiNotFoundResponse({
       schema: {

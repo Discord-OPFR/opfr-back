@@ -5,7 +5,7 @@ interface OPFRConflictOptions {
   description?: string;
 }
 
-export function OPFRConflictResponse(options?: OPFRConflictOptions) {
+export function DocConflictResponse(options?: OPFRConflictOptions) {
   return applyDecorators(
     ApiConflictResponse({
       schema: {

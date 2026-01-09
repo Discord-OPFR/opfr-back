@@ -5,7 +5,7 @@ interface OPFRBadGatewayOptions {
   description?: string;
 }
 
-export function OPFRBadGatewayResponse(options?: OPFRBadGatewayOptions) {
+export function DocBadGatewayResponse(options?: OPFRBadGatewayOptions) {
   return applyDecorators(
     ApiBadGatewayResponse({
       schema: {
