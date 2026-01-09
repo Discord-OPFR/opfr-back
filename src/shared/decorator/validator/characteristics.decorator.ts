@@ -5,6 +5,7 @@ import {
 } from 'class-validator';
 
 import { CHARACTERISTICS } from '@opfr/definitions';
+import { recordToArray } from '@opfr/utils-lang';
 
 export function IsCharacteristicsValid(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
@@ -18,8 +19,9 @@ export function IsCharacteristicsValid(validationOptions?: ValidationOptions) {
           if (!value) return true;
           if (typeof value !== 'object') return false;
 
-          return Object.entries(value).every(([key, val]) => {
-            if (!(key in CHARACTERISTICS)) return false;
+          return recordToArray(value).every(([key, val]: [string, unknown]) => {
+            if (!(CHARACTERISTICS as readonly string[]).includes(key))
+              return false;
 
             if (typeof val === 'number') return true;
             return (
