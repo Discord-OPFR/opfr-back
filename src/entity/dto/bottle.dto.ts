@@ -1,0 +1,58 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import {
+  IsIn,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+import { Buff, type BuffOrigin, type BuffTreePath } from '@opfr/definitions';
+
+import { DocNumberOrTuple } from '../../shared/decorator';
+import { IsNumberOrNull, IsNumberOrTuple } from '../../shared/decorator';
+
+class BuffDTO {
+  @ApiProperty()
+  @IsObject()
+  target!: BuffTreePath;
+
+  @ApiProperty({ type: 'number', example: 1.2 })
+  @IsNumber()
+  multiplier!: number;
+
+  @ApiProperty({ type: 'string' })
+  @IsString()
+  origin!: BuffOrigin;
+
+  @ApiProperty({ type: 'number', nullable: true, example: 2 })
+  @IsNumberOrNull()
+  startIn!: number | null;
+
+  @ApiProperty({ type: 'number', nullable: true, example: 12 })
+  @IsNumberOrNull()
+  endIn!: number | null;
+}
+
+export class BottleDTO {
+  @DocNumberOrTuple()
+  @IsNumberOrTuple()
+  xp!: [number, number] | number;
+
+  @ApiProperty({ type: [BuffDTO] })
+  @ValidateNested({ each: true })
+  @Type(() => BuffDTO)
+  buffs!: Buff[];
+
+  @ApiProperty({ type: 'number', example: 50 })
+  @IsOptional()
+  @IsNumber()
+  hp?: number;
+
+  @ApiProperty({ enum: [1, 2, 3, 4], example: 1 })
+  @IsNumber()
+  @IsIn([1, 2, 3, 4])
+  tier!: 1 | 2 | 3 | 4;
+}

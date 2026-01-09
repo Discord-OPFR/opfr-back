@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   DocumentBuilder,
@@ -6,6 +7,8 @@ import {
 } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 
+import { connectToServices } from '@opfr/services';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -13,6 +16,8 @@ async function bootstrap() {
     snapshot: true,
     abortOnError: false,
   });
+
+  app.setGlobalPrefix('/api');
 
   const config = new DocumentBuilder()
     .setTitle('OPFR API')
@@ -35,7 +40,15 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.setGlobalPrefix('/api');
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  connectToServices(`${process.env.DB_URI}/${process.env.DB_NAME}`);
 
   await app.listen(process.env.PORT ?? 3000);
 }
