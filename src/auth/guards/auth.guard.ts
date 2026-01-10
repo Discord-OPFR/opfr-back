@@ -15,9 +15,6 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (this.configService.get<string>('NODE_ENV') !== 'production')
-      return true;
-
     const request = context.switchToHttp().getRequest();
     const accessToken = request.signedCookies['access_token'];
 

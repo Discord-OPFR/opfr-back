@@ -20,22 +20,20 @@ export class AuthService {
     private readonly cryptoService: CryptoService,
   ) {}
 
-  async getToken(code: string): Promise<string> {
+  async getToken(code: string, redirect: string): Promise<string> {
     const clientId = this.configService.get<string>('DISCORD_CLIENT_ID');
     const clientSecret = this.configService.get<string>(
       'DISCORD_CLIENT_SECRET',
     );
-    const redirect_url = this.configService.get<string>('DISCORD_REDIRECT_URL');
 
-    if (!clientId || !clientSecret || !redirect_url)
-      throw new InternalServerErrorException();
+    if (!clientId || !clientSecret) throw new InternalServerErrorException();
 
     const params = new URLSearchParams({
       client_id: clientId,
       client_secret: clientSecret,
       grant_type: 'authorization_code',
       code,
-      redirect_uri: redirect_url,
+      redirect_uri: decodeURIComponent(redirect) + '/api/auth/discord/callback',
     });
 
     const response = await fetch('https://discord.com/api/oauth2/token', {

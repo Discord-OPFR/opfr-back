@@ -36,9 +36,9 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @ApiOkResponse({ type: UserDto })
   async me(@Req() req: Request, @Res() res: Response) {
-    const authDoc = await this.storageService.findByUserId(req.userId!);
+    const authDoc = await this.storageService.findByUserId(req.userId);
 
-    if (!authDoc) throw new NotFoundException();
+    if (!authDoc || !req.userId) throw new NotFoundException('User not found');
 
     const discordToken = this.cryptoService.decrypt(authDoc.discordToken);
     const member = await this.discordService.getMemberMe(discordToken);
@@ -51,29 +51,41 @@ export class AuthController {
   }
 
   @Get('login')
-  login(@Res() res: Response) {
+  login(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('origin') origin: string,
+  ) {
     const clientId = this.configService.get<string>('DISCORD_CLIENT_ID');
-    const redirect_uri = this.configService.get<string>('DISCORD_REDIRECT_URL');
+    const host = req.get('x-forwarded-host') || req.get('host');
+    const protocol = req.get('x-forwarded-proto') || req.protocol;
+    const publicUrl = `${protocol}://${host}`;
 
-    if (!clientId || !redirect_uri) {
-      throw new InternalServerErrorException();
+    if (!clientId || !origin) {
+      throw new InternalServerErrorException('origin unspecified');
     }
 
-    const discordUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=identify+guilds+guilds.members.read`;
+    const discordUrl = `https://discord.com/oauth2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(`${publicUrl}/api/auth/discord/callback`)}&scope=identify+guilds+guilds.members.read&state=${encodeURIComponent(origin)}`;
 
     res.redirect(discordUrl);
   }
 
   @Get('discord/callback')
-  async callback(@Query('code') code: string, @Res() res: Response) {
-    const token = await this.authService.getToken(code);
+  async callback(
+    @Req() req: Request,
+    @Query('code') code: string,
+    @Query('state') redirect: string,
+    @Res() res: Response,
+  ) {
+    const host = req.get('x-forwarded-host') || req.get('host');
+    const protocol = req.get('x-forwarded-proto') || req.protocol;
+    const publicUrl = `${protocol}://${host}`;
+    const token = await this.authService.getToken(code, publicUrl);
     const member = await this.discordService.getMemberMe(token);
 
     const admin_role_id = this.configService.get<string>('ADMIN_ROLE_ID');
-    const redirectUrl = this.configService.get<string>('APP_REDIRECT_URL');
 
-    if (!admin_role_id || !redirectUrl)
-      throw new InternalServerErrorException();
+    if (!admin_role_id || !redirect) throw new InternalServerErrorException();
 
     const hasRoles = member.roles.includes(admin_role_id);
 
@@ -91,7 +103,6 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'lax',
-      path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 30,
     });
 
@@ -100,11 +111,10 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'lax',
-      path: '/',
       maxAge: 1000 * 60 * 15,
     });
 
-    res.status(HttpStatus.OK).redirect(redirectUrl);
+    res.status(HttpStatus.OK).redirect(redirect);
   }
 
   @Get('refresh')

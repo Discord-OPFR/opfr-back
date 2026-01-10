@@ -11,12 +11,17 @@ import { connectToServices } from '@opfr/services';
 
 import { AppModule } from './app.module';
 
+const URL_WHITELIST = ['https://dashboard.onepiecefr.com'];
+const DEV_URL_WHITELIST = ['http://localhost:5173'];
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     snapshot: true,
     abortOnError: false,
   });
+  const server = app.getHttpAdapter().getInstance();
 
+  server.set('trust proxy', 1);
   app.setGlobalPrefix('/api');
 
   const config = new DocumentBuilder()
@@ -38,7 +43,21 @@ async function bootstrap() {
   app.use(cookieParser(process.env.COOKIE_SECRET));
 
   app.enableCors({
-    origin: process.env.HOST,
+    origin: (
+      origin: string,
+      callback: (error: null | Error, options?: boolean) => void,
+    ) => {
+      const whitelist =
+        process.env.NODE_ENV !== 'production'
+          ? DEV_URL_WHITELIST
+          : URL_WHITELIST;
+
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   });
 

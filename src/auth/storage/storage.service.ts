@@ -37,10 +37,10 @@ export class StorageService {
   }
 
   async findByUserId(
-    userId: string,
+    userId?: string,
     projection: ProjectionType<AuthDocument> = {},
   ) {
-    return this.find({ userId: userId }, projection);
+    return this.find({ userId }, projection);
   }
 
   async updateByUserId(userId: string, token: string) {
