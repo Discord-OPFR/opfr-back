@@ -59,6 +59,7 @@ export class AuthController {
     const clientId = this.configService.get<string>('DISCORD_CLIENT_ID');
     const host = req.get('X-Forwarded-Host') || req.get('host');
     const protocol = req.get('X-Forwarded-Proto') || req.protocol;
+    console.log(req);
     const publicUrl = `${protocol}://${host}`;
 
     if (!clientId || !origin) {
