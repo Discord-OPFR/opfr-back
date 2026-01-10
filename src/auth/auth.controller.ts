@@ -58,7 +58,7 @@ export class AuthController {
   ) {
     const clientId = this.configService.get<string>('DISCORD_CLIENT_ID');
     const host = req.get('x-original-host') || req.get('host');
-    const protocol = req.get('x-original-host') || req.protocol;
+    const protocol = req.get('x-forwarded-proto') || req.protocol;
     console.log(req);
     const publicUrl = `${protocol}://${host}`;
 
@@ -79,7 +79,7 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const host = req.get('x-original-host') || req.get('host');
-    const protocol = req.get('x-original-host') || req.protocol;
+    const protocol = req.get('x-forwarded-proto') || req.protocol;
     const publicUrl = `${protocol}://${host}`;
     const token = await this.authService.getToken(code, publicUrl);
     const member = await this.discordService.getMemberMe(token);
