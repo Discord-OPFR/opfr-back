@@ -26,11 +26,13 @@ async function bootstrap() {
     .build();
   const options: SwaggerDocumentOptions = {
     operationIdFactory: (_, method) => method,
+    ignoreGlobalPrefix: true,
   };
   const documentFactory = () =>
     SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('docs', app, documentFactory, {
     jsonDocumentUrl: 'docs/json',
+    useGlobalPrefix: true,
   });
 
   app.use(cookieParser(process.env.COOKIE_SECRET));
