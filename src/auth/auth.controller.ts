@@ -57,8 +57,8 @@ export class AuthController {
     @Query('origin') origin: string,
   ) {
     const clientId = this.configService.get<string>('DISCORD_CLIENT_ID');
-    const host = req.get('x-forwarded-host') || req.get('host');
-    const protocol = req.get('x-forwarded-proto') || req.protocol;
+    const host = req.get('X-Forwarded-Host') || req.get('host');
+    const protocol = req.get('X-Forwarded-Proto') || req.protocol;
     const publicUrl = `${protocol}://${host}`;
 
     if (!clientId || !origin) {
@@ -77,8 +77,8 @@ export class AuthController {
     @Query('state') redirect: string,
     @Res() res: Response,
   ) {
-    const host = req.get('x-forwarded-host') || req.get('host');
-    const protocol = req.get('x-forwarded-proto') || req.protocol;
+    const host = req.get('X-Forwarded-Host') || req.get('host');
+    const protocol = req.get('X-Forwarded-Proto') || req.protocol;
     const publicUrl = `${protocol}://${host}`;
     const token = await this.authService.getToken(code, publicUrl);
     const member = await this.discordService.getMemberMe(token);
