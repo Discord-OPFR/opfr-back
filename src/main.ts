@@ -10,6 +10,7 @@ import cookieParser from 'cookie-parser';
 import { connectToServices } from '@opfr/services';
 
 import { AppModule } from './app.module';
+import { ERROR_TYPES } from './auth/schemas/auth.schema';
 
 const URL_WHITELIST = ['https://dashboard.onepiecefr.com'];
 const DEV_URL_WHITELIST = ['http://localhost:5173'];
@@ -33,8 +34,16 @@ async function bootstrap() {
     operationIdFactory: (_, method) => method,
     ignoreGlobalPrefix: true,
   };
-  const documentFactory = () =>
-    SwaggerModule.createDocument(app, config, options);
+  const documentFactory = () => {
+    const document = SwaggerModule.createDocument(app, config, options);
+    document.components = document.components || {};
+    document.components.schemas = document.components.schemas || {};
+    document.components.schemas['ERROR_TYPES'] = {
+      type: 'string',
+      enum: Object.values(ERROR_TYPES),
+    };
+    return document;
+  };
   SwaggerModule.setup('docs', app, documentFactory, {
     jsonDocumentUrl: 'docs/json',
     useGlobalPrefix: true,

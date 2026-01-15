@@ -11,7 +11,7 @@ export function DocNotFoundResponse(options?: OPFRNotFoundOptions) {
       schema: {
         type: 'object',
         properties: {
-          message: { type: 'array', items: { type: 'string' } },
+          message: { type: 'string' },
           error: { enum: ['Not Found'] },
           statusCode: { enum: [404] },
         },

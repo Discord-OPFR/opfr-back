@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 
+import { ERROR_TYPES } from './schemas/auth.schema';
 import { CryptoService } from './storage/crypto.service';
 import { StorageService } from './storage/storage.service';
 
@@ -118,20 +119,19 @@ export class AuthService {
       });
 
       return payload.userId;
-    } catch (error) {
-      console.error('Error', error);
-      throw new UnauthorizedException('Invalid token');
+    } catch {
+      throw new UnauthorizedException(ERROR_TYPES.REFRESH_EXPIRED);
     }
   }
 
   async rotateToken(userId: string, refreshToken: string) {
     const auth = await this.storageService.findByUserId(userId);
 
-    if (!auth) throw new UnauthorizedException('Invalid token');
+    if (!auth) throw new UnauthorizedException(ERROR_TYPES.REFRESH_EXPIRED);
 
     const isValid = await bcrypt.compare(refreshToken, auth.refreshToken);
 
-    if (!isValid) throw new UnauthorizedException('Invalid token');
+    if (!isValid) throw new UnauthorizedException(ERROR_TYPES.REFRESH_EXPIRED);
 
     const newRefreshToken = this.generateRefreshToken(userId);
     await this.storageService.updateAuth(userId, {

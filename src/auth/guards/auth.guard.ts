@@ -1,3 +1,4 @@
+import { ERROR_TYPES } from '@auth/schemas/auth.schema';
 import {
   CanActivate,
   ExecutionContext,
@@ -19,7 +20,7 @@ export class AuthGuard implements CanActivate {
     const accessToken = request.signedCookies['access_token'];
 
     if (!accessToken) {
-      throw new UnauthorizedException('Token is required');
+      throw new UnauthorizedException(ERROR_TYPES.NO_TOKEN);
     }
 
     const JWT_SECRET = this.configService.get<string>('JWT_SECRET');
@@ -36,9 +37,8 @@ export class AuthGuard implements CanActivate {
       request.userId = payload.userId;
 
       return true;
-    } catch (err) {
-      console.error('Error', err);
-      throw new UnauthorizedException('Invalid token');
+    } catch {
+      throw new UnauthorizedException(ERROR_TYPES.TOKEN_EXPIRED);
     }
   }
 }

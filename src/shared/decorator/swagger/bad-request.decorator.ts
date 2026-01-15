@@ -11,7 +11,7 @@ export function DocBadRequestResponse(options?: OPFRBadRequestOptions) {
       schema: {
         type: 'object',
         properties: {
-          message: { type: 'array', items: { type: 'string' } },
+          message: { type: 'string' },
           error: { enum: ['Bad Request'] },
           statusCode: { enum: [400] },
         },

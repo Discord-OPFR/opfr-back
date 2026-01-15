@@ -11,7 +11,7 @@ export function DocConflictResponse(options?: OPFRConflictOptions) {
       schema: {
         type: 'object',
         properties: {
-          message: { type: 'array', items: { type: 'string' } },
+          message: { type: 'string' },
           error: { enum: ['Conflict'] },
           statusCode: { enum: [409] },
         },

@@ -11,7 +11,7 @@ export function DocBadGatewayResponse(options?: OPFRBadGatewayOptions) {
       schema: {
         type: 'object',
         properties: {
-          message: { type: 'array', items: { type: 'string' } },
+          message: { type: 'string' },
           error: { enum: ['Bad Gateway'] },
           statusCode: { enum: [502] },
         },

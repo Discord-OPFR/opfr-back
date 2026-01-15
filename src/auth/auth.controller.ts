@@ -9,16 +9,17 @@ import {
   Req,
   Res,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOkResponse } from '@nestjs/swagger';
+import { DocNotFoundResponse } from '@shared/decorator';
+import { ApiAuth } from '@shared/decorator/auth/auth.decorator';
 import type { Request, Response } from 'express';
 
 import { DiscordService } from '../discord/discord.service';
 import { AuthService } from './auth.service';
 import { UserDto } from './dto/user.dto';
-import { AuthGuard } from './guards/auth.guard';
+import { ERROR_TYPES } from './schemas/auth.schema';
 import { CryptoService } from './storage/crypto.service';
 import { StorageService } from './storage/storage.service';
 
@@ -33,7 +34,8 @@ export class AuthController {
   ) {}
 
   @Get('me')
-  @UseGuards(AuthGuard)
+  @ApiAuth()
+  @DocNotFoundResponse({ description: 'User not found' })
   @ApiOkResponse({ type: UserDto })
   async me(@Req() req: Request, @Res() res: Response) {
     const authDoc = await this.storageService.findByUserId(req.userId);
@@ -111,7 +113,7 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 1000 * 60 * 15,
+      maxAge: 1000 * 50,
     });
 
     res.status(HttpStatus.OK).redirect(redirect);
@@ -121,8 +123,7 @@ export class AuthController {
   async refresh(@Req() req: Request, @Res() res: Response) {
     const refreshToken = req.signedCookies['refresh_token'];
 
-    if (!refreshToken)
-      throw new UnauthorizedException('Missing or invalid refresh token');
+    if (!refreshToken) throw new UnauthorizedException(ERROR_TYPES.NO_TOKEN);
 
     const userId = await this.authService.verifyRefreshToken(refreshToken);
     const newRefreshToken = await this.authService.rotateToken(
