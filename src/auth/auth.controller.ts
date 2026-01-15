@@ -105,7 +105,8 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 1000 * 60 * 60 * 24 * 30,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      path: '/api/auth/refresh',
     });
 
     res.cookie('access_token', accessToken, {
@@ -113,7 +114,8 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 1000 * 50,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      path: '/api',
     });
 
     res.status(HttpStatus.OK).redirect(redirect);
@@ -138,8 +140,8 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'lax',
-      path: '/auth/refresh',
-      maxAge: 1000 * 60 * 60 * 24 * 30,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      path: '/api/auth/refresh',
     });
 
     const accessToken = this.authService.generateAccessToken(userId);
@@ -149,8 +151,8 @@ export class AuthController {
       signed: true,
       secure: NODE_ENV === 'production',
       sameSite: 'lax',
-      path: '/',
-      maxAge: 1000 * 60 * 15,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+      path: '/api',
     });
 
     res.status(HttpStatus.OK).send();

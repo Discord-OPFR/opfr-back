@@ -96,7 +96,7 @@ export class AuthService {
 
     if (refreshAlreadyExists) {
       await this.storageService.updateAuth(userId, {
-        $set: { refreshToken: refreshToken },
+        $set: { refreshToken: hash },
       });
     } else {
       await this.storageService.create({
@@ -134,8 +134,9 @@ export class AuthService {
     if (!isValid) throw new UnauthorizedException(ERROR_TYPES.REFRESH_EXPIRED);
 
     const newRefreshToken = this.generateRefreshToken(userId);
+    const hash = await bcrypt.hash(refreshToken, 10);
     await this.storageService.updateAuth(userId, {
-      $set: { refreshToken: newRefreshToken },
+      $set: { refreshToken: hash },
     });
 
     return newRefreshToken;
