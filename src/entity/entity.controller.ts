@@ -1,18 +1,10 @@
-import { AuthGuard } from '@auth/guards/auth.guard';
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { DocBadGatewayResponse } from '@shared/decorator';
 import { DocBadRequestResponse } from '@shared/decorator';
 import { DocConflictResponse } from '@shared/decorator';
 import { DocNotFoundResponse } from '@shared/decorator';
+import { ApiAuth } from '@shared/decorator/auth/auth.decorator';
 
 import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
 import { CreateItemDto } from './dto/create/create-item.dto';
@@ -26,7 +18,7 @@ import { EquipmentNotFoundException } from './errors/EquipmentNotFound';
 import { ItemNotFoundException } from './errors/ItemNotFound';
 
 @Controller('entity')
-@UseGuards(AuthGuard)
+@ApiAuth()
 export class EntityController {
   constructor(private readonly entityService: EntityService) {}
 

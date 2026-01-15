@@ -42,8 +42,29 @@ export class AuthController {
 
     if (!authDoc || !req.userId) throw new NotFoundException('User not found');
 
+    const CACHE_TTL_MS = 1000 * 60 * 60;
+    const cachedMember = authDoc.cachedMember;
+    const isCacheValid =
+      cachedMember &&
+      Date.now() - new Date(cachedMember.cachedAt).getTime() < CACHE_TTL_MS;
+
+    if (isCacheValid) {
+      return res.status(HttpStatus.OK).json({
+        userId: cachedMember.odId,
+        username: cachedMember.username,
+        avatar: cachedMember.avatar,
+      });
+    }
+
     const discordToken = this.cryptoService.decrypt(authDoc.discordToken);
     const member = await this.discordService.getMemberMe(discordToken);
+
+    await this.storageService.updateCachedMember(req.userId, {
+      odId: member.user.id,
+      username: member.user.username,
+      avatar: member.user.avatar,
+      cachedAt: new Date(),
+    });
 
     res.status(HttpStatus.OK).json({
       userId: member.user.id,
@@ -97,6 +118,13 @@ export class AuthController {
     const accessToken = this.authService.generateAccessToken(member.user.id);
 
     await this.authService.storeAuth(member.user.id, refreshToken, token);
+
+    await this.storageService.updateCachedMember(member.user.id, {
+      odId: member.user.id,
+      username: member.user.username,
+      avatar: member.user.avatar,
+      cachedAt: new Date(),
+    });
 
     const NODE_ENV = this.configService.get<string>('NODE_ENV');
 

@@ -10,6 +10,13 @@ export enum ERROR_TYPES {
   INSUFFICIENT_PERMISSIONS = 'INSUFFICIENT_PERMISSIONS',
 }
 
+export interface CachedMember {
+  odId: string;
+  username: string;
+  avatar: string | null;
+  cachedAt: Date;
+}
+
 @Schema()
 export class Auth {
   @Prop({ required: true, unique: true })
@@ -24,6 +31,9 @@ export class Auth {
 
   @Prop({ required: true })
   refreshToken!: string;
+
+  @Prop({ type: Object })
+  cachedMember?: CachedMember;
 }
 
 export const AuthSchema = SchemaFactory.createForClass(Auth);

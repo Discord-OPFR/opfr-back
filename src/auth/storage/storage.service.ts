@@ -8,7 +8,7 @@ import {
   UpdateWithAggregationPipeline,
 } from 'mongoose';
 
-import { Auth, AuthDocument } from '../schemas/auth.schema';
+import { Auth, AuthDocument, CachedMember } from '../schemas/auth.schema';
 
 @Injectable()
 export class StorageService {
@@ -52,5 +52,9 @@ export class StorageService {
     update: UpdateQuery<AuthDocument> | UpdateWithAggregationPipeline,
   ) {
     await this.authModel.updateOne({ userId }, update);
+  }
+
+  async updateCachedMember(userId: string, cachedMember: CachedMember) {
+    await this.authModel.updateOne({ userId }, { cachedMember });
   }
 }
