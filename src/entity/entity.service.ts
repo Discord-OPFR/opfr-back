@@ -3,11 +3,16 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
+import { MongoQueryBuilder } from '@shared/types/mongoQueryBuilder';
 
+import { EQUIPMENT_CATEGORY, ITEM_CATEGORY } from '@opfr/definitions';
 import { entityService } from '@opfr/services';
 
 import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
 import { CreateItemDto } from './dto/create/create-item.dto';
+import { FilterEntityDto } from './dto/filter/filter-entity.dto';
+import { FilterEquipmentDto } from './dto/filter/filter-equipment.dto';
+import { FilterItemDto } from './dto/filter/filter-item.dto';
 import { UpdateEquipmentDto } from './dto/update/update-equipment.dto';
 import { UpdateItemDto } from './dto/update/update-item.dto';
 import { EntityNotFoundException } from './errors/EntityNotFound';
@@ -16,24 +21,49 @@ import { ItemNotFoundException } from './errors/ItemNotFound';
 
 @Injectable()
 export class EntityService {
-  async getAllEntity() {
+  async getAllEntity(filters?: FilterEntityDto) {
+    const mongoQuery = new MongoQueryBuilder()
+      .addSearch('entityId', filters?.entityId)
+      .addFilter('category', filters?.category)
+      .addFilter('rankId', filters?.rankId)
+      .addFilter('type', filters?.type)
+      .build();
+
     try {
-      return entityService.getAll();
+      return entityService.getMany(mongoQuery);
     } catch {
       throw new BadGatewayException();
     }
   }
 
-  async getAllItems() {
-    const entities = await entityService.getAll();
+  async getAllItems(filters?: FilterItemDto) {
+    const mongoQuery = new MongoQueryBuilder()
+      .addSearch('entityId', filters?.entityId)
+      .addFilter('category', filters?.category || ITEM_CATEGORY)
+      .addFilter('rankId', filters?.rankId)
+      .addFilter('type', filters?.type)
+      .build();
 
-    return entities.filter(e => entityService.isItem(e));
+    try {
+      return entityService.getMany(mongoQuery);
+    } catch {
+      throw new BadGatewayException();
+    }
   }
 
-  async getAllEquipments() {
-    const entities = await entityService.getAll();
+  async getAllEquipments(filters?: FilterEquipmentDto) {
+    const mongoQuery = new MongoQueryBuilder()
+      .addSearch('entityId', filters?.entityId)
+      .addFilter('category', filters?.category || EQUIPMENT_CATEGORY)
+      .addFilter('rankId', filters?.rankId)
+      .addFilter('type', filters?.type)
+      .build();
 
-    return entities.filter(e => entityService.isEquipment(e));
+    try {
+      return entityService.getMany(mongoQuery);
+    } catch {
+      throw new BadGatewayException();
+    }
   }
 
   async getEntity(id: string) {

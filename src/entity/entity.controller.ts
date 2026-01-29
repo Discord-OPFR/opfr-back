@@ -1,13 +1,15 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { DocBadGatewayResponse } from '@shared/decorator';
 import { DocBadRequestResponse } from '@shared/decorator';
 import { DocConflictResponse } from '@shared/decorator';
 import { DocNotFoundResponse } from '@shared/decorator';
-import { ApiAuth } from '@shared/decorator/auth/auth.decorator';
+import { ApiAuth } from '@shared/decorator';
 
 import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
 import { CreateItemDto } from './dto/create/create-item.dto';
+import { FilterEntityDto } from './dto/filter/filter-entity.dto';
+import { FilterItemDto } from './dto/filter/filter-item.dto';
 import { ResponseEntityDto } from './dto/response/response-entity.dto';
 import { ResponseEquipmentDTO } from './dto/response/response-equipment.dto';
 import { ResponseItemDto } from './dto/response/response-item.dto';
@@ -41,15 +43,15 @@ export class EntityController {
   @Get()
   @ApiOkResponse({ type: [ResponseEntityDto] })
   @DocBadGatewayResponse()
-  async getAll() {
-    return this.entityService.getAllEntity();
+  async getAll(@Query() query: FilterEntityDto) {
+    return this.entityService.getAllEntity(query);
   }
 
   @ApiOkResponse({ type: [ResponseItemDto] })
   @Get('/item')
   @DocBadGatewayResponse()
-  async getAllItems() {
-    return this.entityService.getAllItems();
+  async getAllItems(@Query() query: FilterItemDto) {
+    return this.entityService.getAllItems(query);
   }
 
   @DocNotFoundResponse()
