@@ -1,3 +1,4 @@
+import { ERROR_TYPES } from '@auth/schemas/auth.schema';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -10,10 +11,9 @@ import cookieParser from 'cookie-parser';
 import { connectToServices } from '@opfr/services';
 
 import { AppModule } from './app.module';
-import { ERROR_TYPES } from './auth/schemas/auth.schema';
 
 const URL_WHITELIST = ['https://dashboard.onepiecefr.com'];
-const DEV_URL_WHITELIST = ['http://localhost:5173'];
+const DEV_URL_WHITELIST = ['http://localhost:5173', 'http://localhost:3000'];
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -32,7 +32,7 @@ async function bootstrap() {
     .build();
   const options: SwaggerDocumentOptions = {
     operationIdFactory: (_, method) => method,
-    ignoreGlobalPrefix: true,
+    // ignoreGlobalPrefix: true,
   };
   const documentFactory = () => {
     const document = SwaggerModule.createDocument(app, config, options);
