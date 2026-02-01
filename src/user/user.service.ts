@@ -1,24 +1,29 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
-import { MongoQueryBuilder } from '@shared/types/mongoQueryBuilder';
+import { MongoQueryBuilder } from '@shared/utils/mongoQueryBuilder';
 
 import { userService } from '@opfr/services';
 
 import { FilterUserDto } from './dto/filter-user.dto';
+import { GetOptionsUserDto } from './dto/get-user-options.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  async getAllUsers(filters?: FilterUserDto): Promise<ResponseUserDto[]> {
+  async getAllUsers(
+    filters?: FilterUserDto,
+    options?: GetOptionsUserDto,
+  ): Promise<ResponseUserDto[]> {
     const mongodbQuery = new MongoQueryBuilder()
       .addFilter('discordId', filters?.discordId)
       .addFilter('faction', filters?.faction)
       .addFilter('birthday', filters?.birthday)
       .addFilter('canChangeFaction', filters?.canChangeFaction)
       .addFilter('canChooseFaction', filters?.canChooseFaction)
+      .addSorts(options?.sort)
+      .addLimit(options?.limit)
+      .setPage(options?.page)
       .build();
-
-    console.log(mongodbQuery);
 
     try {
       return userService.getMany(mongodbQuery);

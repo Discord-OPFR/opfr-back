@@ -12,7 +12,7 @@ import {
 import { ApiNoContentResponse, ApiOkResponse } from '@nestjs/swagger';
 import { DocBadGatewayResponse, DocNotFoundResponse } from '@shared/decorator';
 
-import { FilterUserDto } from './dto/filter-user.dto';
+import { GetUserQueryDto } from './dto/get-user-query.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -24,8 +24,12 @@ export class UserController {
   @Get()
   @ApiOkResponse({ type: [ResponseUserDto] })
   @DocBadGatewayResponse()
-  async getAllUser(@Query() query: FilterUserDto): Promise<ResponseUserDto[]> {
-    return this.userService.getAllUsers(query);
+  async getListUser(
+    @Query() query: GetUserQueryDto,
+  ): Promise<ResponseUserDto[]> {
+    const { sort, limit, page, ...filter } = query;
+
+    return this.userService.getAllUsers(filter, { sort, limit, page });
   }
 
   @Get(':id')
