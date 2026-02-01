@@ -5,7 +5,7 @@ import { DocNotFoundResponse } from '@shared/decorator';
 import { ApiAuth } from '@shared/decorator';
 
 import { CreateEntityDto } from './dto/create/create-entity.dto';
-import { FilterEntityDto } from './dto/filter/filter-entity.dto';
+import { GetEntityQueryDto } from './dto/get-entity-query.dto';
 import { ResponseEntityDto } from './dto/response/response-entity.dto';
 import { UpdateEntityDto } from './dto/update/update-entity.dto';
 import { EntityService } from './entity.service';
@@ -18,8 +18,10 @@ export class EntityController {
   @Get()
   @ApiOkResponse({ type: [ResponseEntityDto] })
   @DocBadGatewayResponse()
-  async getAll(@Query() query: FilterEntityDto) {
-    return this.entityService.getAllEntity(query);
+  async getAll(@Query() query: GetEntityQueryDto) {
+    const { sort, page, limit, ...filter } = query;
+
+    return this.entityService.getAllEntity(filter, { sort, page, limit });
   }
 
   @Get(':entityId')

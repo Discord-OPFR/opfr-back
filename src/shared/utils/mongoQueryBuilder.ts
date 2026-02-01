@@ -1,5 +1,8 @@
 export class MongoQueryBuilder {
   private query: Record<string, object | string | number> = {};
+  private sort: Record<string, 1 | -1> = {};
+  private limit?: number;
+  private page?: number;
 
   addFilter(
     path: string,
@@ -31,7 +34,52 @@ export class MongoQueryBuilder {
     return this;
   }
 
+  addSort(field: string | undefined) {
+    if (!field) return this;
+
+    const isDesc = field.startsWith('-');
+    const cleanField = isDesc ? field.substring(1) : field;
+
+    this.sort[cleanField] = isDesc ? -1 : 1;
+
+    return this;
+  }
+
+  addSorts(fields: string[] | undefined) {
+    if (!fields) return this;
+
+    for (const field of fields) {
+      this.addSort(field);
+    }
+
+    return this;
+  }
+
+  addLimit(limit?: number) {
+    this.limit = limit;
+
+    return this;
+  }
+
+  setPage(page?: number) {
+    if (!this.limit) return this;
+
+    this.page = page;
+
+    return this;
+  }
+
   build() {
-    return this.query;
+    return {
+      query: this.query,
+      options: {
+        sort: this.sort,
+        limit: this.limit,
+        skip:
+          this.sort && this.page && this.limit
+            ? (this.page - 1) * this.limit
+            : undefined,
+      },
+    };
   }
 }
