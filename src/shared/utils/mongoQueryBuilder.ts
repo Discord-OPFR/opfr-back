@@ -56,14 +56,14 @@ export class MongoQueryBuilder {
   }
 
   addLimit(limit?: number) {
+    if (!limit || limit <= 0) return this;
     this.limit = limit;
 
     return this;
   }
 
   setPage(page?: number) {
-    if (!this.limit) return this;
-
+    if (!page || page <= 0) return this;
     this.page = page;
 
     return this;

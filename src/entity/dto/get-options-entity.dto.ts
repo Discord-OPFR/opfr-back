@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ToArray } from '@shared/decorator';
 import { Type } from 'class-transformer';
-import { IsArray, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsArray, IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 
 const ENTITY_SORT = [
   'entityId',
@@ -27,12 +27,16 @@ export class GetOptionsEntityDto {
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
+  @IsInt()
+  @Min(1)
+  @Max(100)
   page?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
+  @IsInt()
+  @Min(1)
+  @Max(100)
   limit?: number;
 }

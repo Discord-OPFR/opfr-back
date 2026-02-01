@@ -20,8 +20,9 @@ export class AuthGuard implements CanActivate {
     const accessToken = request.signedCookies['access_token'];
 
     const DEV_USERID = this.configService.get<string>('DEV_USERID');
+    const NODE_ENV = this.configService.get<string>('NODE_ENV');
 
-    if (DEV_USERID) {
+    if (DEV_USERID && NODE_ENV === 'development') {
       request.userId = DEV_USERID;
 
       return true;
