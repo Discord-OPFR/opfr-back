@@ -18,7 +18,7 @@ export class EntityController {
   @Get()
   @ApiOkResponse({ type: [ResponseEntityDto] })
   @DocBadGatewayResponse()
-  async getAll(@Query() query: GetEntityQueryDto) {
+  async getList(@Query() query: GetEntityQueryDto) {
     const { sort, page, limit, ...filter } = query;
 
     return this.entityService.getAllEntity(filter, { sort, page, limit });
