@@ -1,4 +1,6 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ToArray } from '@shared/decorator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 
 import {
   ENTITY_CATEGORY,
@@ -10,25 +12,38 @@ import {
 } from '@opfr/definitions';
 
 export class FilterEntityDto {
+  @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   entityId!: string;
 
+  @ApiPropertyOptional()
   @IsOptional()
+  @ToArray()
+  @IsArray()
   @IsEnum(ENTITY_CATEGORY, {
+    each: true,
     message: `category must be one of the following values: ${ENTITY_CATEGORY}`,
   })
-  category!: EntityCategory;
+  category!: EntityCategory[];
 
+  @ApiPropertyOptional()
   @IsOptional()
-  @IsEnum(RANKS, {
-    message: `category must be one of the following values: ${RANKS}`,
+  @ToArray()
+  @IsArray()
+  @IsEnum(Object.keys(RANKS), {
+    each: true,
+    message: `rankId must be one of the following values: ${Object.keys(RANKS)}`,
   })
-  rankId!: RankId;
+  rankId!: RankId[];
 
+  @ApiPropertyOptional()
   @IsOptional()
+  @ToArray()
+  @IsArray()
   @IsEnum(ENTITY_TYPES, {
-    message: `category must be one of the following values: ${ENTITY_TYPES}`,
+    each: true,
+    message: `type must be one of the following values: ${ENTITY_TYPES}`,
   })
-  type!: EntityType;
+  type!: EntityType[];
 }
