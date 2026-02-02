@@ -10,23 +10,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  async getAllUsers(
+  async getListUsers(
     filters?: FilterUserDto,
-    options?: GetOptionsUserDto,
+    queryOptions?: GetOptionsUserDto,
   ): Promise<ResponseUserDto[]> {
-    const mongodbQuery = new MongoQueryBuilder()
+    const { query, options } = new MongoQueryBuilder()
       .addFilter('discordId', filters?.discordId)
       .addFilter('faction', filters?.faction)
       .addFilter('birthday', filters?.birthday)
       .addFilter('canChangeFaction', filters?.canChangeFaction)
       .addFilter('canChooseFaction', filters?.canChooseFaction)
-      .addSorts(options?.sort)
-      .addLimit(options?.limit)
-      .setPage(options?.page)
+      .addSorts(queryOptions?.sort)
+      .addLimit(queryOptions?.limit)
+      .setPage(queryOptions?.page)
       .build();
 
     try {
-      return userService.getMany(mongodbQuery);
+      return userService.getMany(query, options);
     } catch {
       throw new BadGatewayException();
     }

@@ -29,7 +29,7 @@ export class UserController {
   ): Promise<ResponseUserDto[]> {
     const { sort, limit, page, ...filter } = query;
 
-    return this.userService.getAllUsers(filter, { sort, limit, page });
+    return this.userService.getListUsers(filter, { sort, limit, page });
   }
 
   @Get(':id')
