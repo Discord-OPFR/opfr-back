@@ -1,113 +1,51 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { DocBadGatewayResponse } from '@shared/decorator';
-import { DocBadRequestResponse } from '@shared/decorator';
-import { DocConflictResponse } from '@shared/decorator';
 import { DocNotFoundResponse } from '@shared/decorator';
-import { ApiAuth } from '@shared/decorator/auth/auth.decorator';
+import { ApiAuth } from '@shared/decorator';
 
-import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
-import { CreateItemDto } from './dto/create/create-item.dto';
+import { CreateEntityDto } from './dto/create/create-entity.dto';
+import { GetEntityQueryDto } from './dto/get-entity-query.dto';
 import { ResponseEntityDto } from './dto/response/response-entity.dto';
-import { ResponseEquipmentDTO } from './dto/response/response-equipment.dto';
-import { ResponseItemDto } from './dto/response/response-item.dto';
-import { UpdateEquipmentDto } from './dto/update/update-equipment.dto';
-import { UpdateItemDto } from './dto/update/update-item.dto';
+import { UpdateEntityDto } from './dto/update/update-entity.dto';
 import { EntityService } from './entity.service';
-import { EquipmentNotFoundException } from './errors/EquipmentNotFound';
-import { ItemNotFoundException } from './errors/ItemNotFound';
 
 @Controller('entity')
 @ApiAuth()
 export class EntityController {
   constructor(private readonly entityService: EntityService) {}
 
-  @Post('/item')
-  @ApiCreatedResponse({ type: ResponseItemDto })
-  @DocBadRequestResponse()
-  @DocConflictResponse()
-  async createItem(@Body() createItemDto: CreateItemDto) {
-    return this.entityService.createEntity(createItemDto);
-  }
-
-  @Post('/equipment')
-  @ApiCreatedResponse({ type: ResponseEquipmentDTO })
-  @DocBadRequestResponse()
-  @DocConflictResponse()
-  async createEquipment(@Body() createEquipmentDto: CreateEquipmentDto) {
-    return this.entityService.createEntity(createEquipmentDto);
-  }
-
   @Get()
   @ApiOkResponse({ type: [ResponseEntityDto] })
   @DocBadGatewayResponse()
-  async getAll() {
-    return this.entityService.getAllEntity();
+  async getList(@Query() query: GetEntityQueryDto) {
+    const { sort, page, limit, ...filter } = query;
+
+    return this.entityService.getAllEntity(filter, { sort, page, limit });
   }
 
-  @ApiOkResponse({ type: [ResponseItemDto] })
-  @Get('/item')
-  @DocBadGatewayResponse()
-  async getAllItems() {
-    return this.entityService.getAllItems();
-  }
-
-  @DocNotFoundResponse()
-  @ApiOkResponse({ type: ResponseItemDto })
-  @DocBadGatewayResponse()
-  @Put('/item/:entityId')
-  async updateItem(
-    @Param('entityId') id: string,
-    @Body() updateItemDto: UpdateItemDto,
-  ) {
-    if (!(await this.entityService.isItem(id)))
-      throw new ItemNotFoundException(id);
-
-    return this.entityService.updateEntity(id, updateItemDto);
-  }
-
-  @DocBadGatewayResponse()
-  @ApiOkResponse({ type: [ResponseEquipmentDTO] })
-  @Get('/equipment/')
-  async getAllEquipments() {
-    return this.entityService.getAllEquipments();
-  }
-
-  @DocBadGatewayResponse()
-  @ApiOkResponse({ type: ResponseEquipmentDTO })
-  @DocNotFoundResponse()
-  @Put('/equipment/:entityId')
-  async updateEquipment(
-    @Param('entityId') id: string,
-    @Body() updateEquipmentDto: UpdateEquipmentDto,
-  ) {
-    if (!(await this.entityService.isEquipment(id)))
-      throw new EquipmentNotFoundException(id);
-
-    return this.entityService.updateEntity(id, updateEquipmentDto);
-  }
-
-  @DocNotFoundResponse()
-  @DocBadGatewayResponse()
-  @ApiOkResponse({ type: [ResponseEntityDto] })
   @Get(':entityId')
+  @ApiOkResponse({ type: [ResponseEntityDto] })
+  @DocNotFoundResponse()
+  @DocBadGatewayResponse()
   async getById(@Param('entityId') id: string) {
     return this.entityService.getEntity(id);
   }
 
-  @DocNotFoundResponse()
+  @Put(':entityId')
+  @ApiOkResponse({ type: [ResponseEntityDto] })
   @DocBadGatewayResponse()
-  @ApiOkResponse({ type: ResponseItemDto })
-  @Get('/item/:entityId')
-  async getItemById(@Param('entityId') id: string) {
-    return this.entityService.getItem(id);
+  async updateEntity(
+    @Param('entityId') entityId: string,
+    @Body() updateEntityDto: UpdateEntityDto,
+  ) {
+    return this.entityService.updateEntity(entityId, updateEntityDto);
   }
 
-  @DocNotFoundResponse()
+  @Post()
+  @ApiCreatedResponse({ type: [ResponseEntityDto] })
   @DocBadGatewayResponse()
-  @ApiOkResponse({ type: ResponseItemDto })
-  @Get('/equipment/:entityId')
-  async getEquipmentById(@Param('entityId') id: string) {
-    return this.entityService.getEquipment(id);
+  async createEntity(@Body() createEntityDto: CreateEntityDto) {
+    return this.entityService.createEntity(createEntityDto);
   }
 }

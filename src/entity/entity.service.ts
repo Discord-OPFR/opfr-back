@@ -3,37 +3,37 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
+import { MongoQueryBuilder } from '@shared/utils/mongoQueryBuilder';
 
 import { entityService } from '@opfr/services';
 
-import { CreateEquipmentDto } from './dto/create/create-equipment.dto';
-import { CreateItemDto } from './dto/create/create-item.dto';
-import { UpdateEquipmentDto } from './dto/update/update-equipment.dto';
-import { UpdateItemDto } from './dto/update/update-item.dto';
+import { CreateEntityDto } from './dto/create/create-entity.dto';
+import { FilterEntityDto } from './dto/filter/filter-entity.dto';
+import { GetOptionsEntityDto } from './dto/get-options-entity.dto';
+import { UpdateEntityDto } from './dto/update/update-entity.dto';
 import { EntityNotFoundException } from './errors/EntityNotFound';
-import { EquipmentNotFoundException } from './errors/EquipmentNotFound';
-import { ItemNotFoundException } from './errors/ItemNotFound';
 
 @Injectable()
 export class EntityService {
-  async getAllEntity() {
+  async getAllEntity(
+    filters?: FilterEntityDto,
+    queryOptions?: GetOptionsEntityDto,
+  ) {
+    const { query, options } = new MongoQueryBuilder()
+      .addSearch('entityId', filters?.entityId)
+      .addFilter('category', filters?.category)
+      .addFilter('rankId', filters?.rankId)
+      .addFilter('type', filters?.type)
+      .addSorts(queryOptions?.sort)
+      .addLimit(queryOptions?.limit)
+      .setPage(queryOptions?.page)
+      .build();
+
     try {
-      return entityService.getAll();
+      return entityService.getMany(query, options);
     } catch {
       throw new BadGatewayException();
     }
-  }
-
-  async getAllItems() {
-    const entities = await entityService.getAll();
-
-    return entities.filter(e => entityService.isItem(e));
-  }
-
-  async getAllEquipments() {
-    const entities = await entityService.getAll();
-
-    return entities.filter(e => entityService.isEquipment(e));
   }
 
   async getEntity(id: string) {
@@ -52,63 +52,12 @@ export class EntityService {
     }
   }
 
-  async getItem(id: string) {
-    try {
-      const item = await entityService.get(id);
-
-      if (!item || !entityService.isItem(item)) {
-        throw new ItemNotFoundException(id);
-      }
-
-      return item;
-    } catch (err) {
-      if (err instanceof ItemNotFoundException) {
-        throw err;
-      }
-
-      throw new BadGatewayException();
-    }
-  }
-
-  async getEquipment(id: string) {
-    try {
-      const equipment = await entityService.get(id);
-
-      if (!equipment || !entityService.isEquipment(equipment)) {
-        throw new EquipmentNotFoundException(id);
-      }
-
-      return equipment;
-    } catch (err) {
-      if (err instanceof EquipmentNotFoundException) {
-        throw err;
-      }
-
-      throw new BadGatewayException();
-    }
-  }
-
-  async isItem(id: string) {
-    const item = await this.getItem(id);
-
-    return item !== null;
-  }
-
-  async isEquipment(id: string) {
-    const equipment = await this.getEquipment(id);
-
-    return equipment !== null;
-  }
-
-  async updateEntity(
-    id: string,
-    updateItemDto: UpdateItemDto | UpdateEquipmentDto,
-  ) {
+  async updateEntity(id: string, updateEntityDto: UpdateEntityDto) {
     try {
       return entityService.update(
         { entityId: id },
         {
-          $set: updateItemDto,
+          $set: updateEntityDto,
         },
       );
     } catch {
@@ -116,9 +65,9 @@ export class EntityService {
     }
   }
 
-  async createEntity(createItemDto: CreateItemDto | CreateEquipmentDto) {
+  async createEntity(createEntityDto: CreateEntityDto) {
     try {
-      return entityService.createInDb(createItemDto);
+      return entityService.createInDb(createEntityDto);
     } catch (e) {
       if (e && typeof e === 'object' && 'code' in e && e.code === 11000) {
         throw new ConflictException();
