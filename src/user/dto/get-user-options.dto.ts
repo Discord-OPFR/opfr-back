@@ -16,7 +16,7 @@ const USER_SORT = [
   '-canChooseFaction',
 ];
 
-type UserSortType = (typeof USER_SORT)[number];
+type UserSort = (typeof USER_SORT)[number];
 
 export class GetOptionsUserDto {
   @ApiPropertyOptional()
@@ -24,7 +24,7 @@ export class GetOptionsUserDto {
   @ToArray()
   @IsArray()
   @IsEnum(USER_SORT, { each: true })
-  sort?: UserSortType[];
+  sort?: UserSort[];
 
   @ApiPropertyOptional()
   @IsOptional()

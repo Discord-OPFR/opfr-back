@@ -12,7 +12,7 @@ export function IsDateOrNull(validationOptions?: ValidationOptions) {
           return value === null || value instanceof Date;
         },
         defaultMessage() {
-          return `${propertyName} must be a number or null`;
+          return `${propertyName} must be a date or null`;
         },
       },
     });
