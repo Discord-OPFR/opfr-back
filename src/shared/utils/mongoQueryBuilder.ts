@@ -1,15 +1,18 @@
 export class MongoQueryBuilder {
-  private query: Record<string, object | string | number> = {};
+  private query: Record<
+    string,
+    object | string | number | boolean | Date | null
+  > = {};
   private sort: Record<string, 1 | -1> = {};
   private limit?: number;
   private page?: number;
 
   addFilter(
     path: string,
-    value: object | string | number | undefined,
+    value: object | string | number | boolean | Date | null | undefined,
     operator: string = '$eq',
   ) {
-    if (!value) return this;
+    if (value === undefined) return this;
 
     if (operator === '$eq') {
       this.query[path] = value;
