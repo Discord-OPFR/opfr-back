@@ -32,7 +32,6 @@ async function bootstrap() {
     .build();
   const options: SwaggerDocumentOptions = {
     operationIdFactory: (_, method) => method,
-    // ignoreGlobalPrefix: true,
   };
   const documentFactory = () => {
     const document = SwaggerModule.createDocument(app, config, options);
